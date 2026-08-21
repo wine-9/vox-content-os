@@ -1,0 +1,26 @@
+{
+  "name": "vox-content-os",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "KIMI_MODEL=${KIMI_MODEL:-Pro/moonshotai/Kimi-K2.6} next dev",
+    "build": "next build",
+    "start": "KIMI_MODEL=${KIMI_MODEL:-Pro/moonshotai/Kimi-K2.6} next start"
+  },
+  "dependencies": {
+    "@types/diff": "^7.0.2",
+    "cheerio": "^1.1.2",
+    "diff": "^9.0.0",
+    "fast-xml-parser": "^5.11.0",
+    "juice": "^11.0.1",
+    "next": "latest",
+    "react": "latest",
+    "react-dom": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "typescript": "latest"
+  }
+}

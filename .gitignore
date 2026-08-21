@@ -1,0 +1,49 @@
+# Dependencies / build
+node_modules/
+.next/
+.venv*/
+*.tsbuildinfo
+
+# Local secrets and environment overrides
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Runtime data
+/data/
+/public/generated/
+*.sqlite
+*.sqlite-*
+*.db
+*.log
+*.pid
+.vox-content-os.*
+
+# Publisher auth/session material
+**/cookies/
+**/cookie/
+**/*cookie*.json
+**/*session*.json
+**/*credentials*.json
+**/*token*.json
+
+# Local third-party checkouts; see docs/THIRD-PARTY.md
+/vendor/
+
+# Local backups / temp
+.ops-backups/
+*.bak
+*.bak-*
+*.backup
+*.tmp
+*.swp
+*~
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/

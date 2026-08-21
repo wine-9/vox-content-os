@@ -1,0 +1,10 @@
+{
+  "name": "VOX Learning Engine - Stub",
+  "nodes": [],
+  "connections": {},
+  "active": false,
+  "settings": {},
+  "meta": {
+    "note": "Final + label -> candidate/final diff -> accumulate five worth_learning -> skill proposal."
+  }
+}

@@ -1,0 +1,2 @@
+import{checkSauAccount,startSauLogin}from'../../../../lib/local-social-publish';export const runtime='nodejs';
+export async function POST(req:Request){try{const x=await req.json(),p=String(x.platform||''),action=String(x.action||'check');if(!['douyin','xiaohongshu'].includes(p))throw Error('平台无效');if(action==='login')return Response.json({ok:true,...startSauLogin(p as any)});return Response.json({ok:true,...await checkSauAccount(p as any,true)})}catch(e:any){return Response.json({ok:false,error:String(e.message||e)},{status:400})}}

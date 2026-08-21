@@ -1,0 +1,10 @@
+{
+  "name": "VOX Topic Engine - Stub",
+  "nodes": [],
+  "connections": {},
+  "active": false,
+  "settings": {},
+  "meta": {
+    "note": "Import into n8n, then add Schedule -> Research adapters -> Rank -> DB insert."
+  }
+}

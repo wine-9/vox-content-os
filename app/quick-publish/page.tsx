@@ -1,1 +1,2 @@
-import QuickPublishClient from'./QuickPublishClient';export default function Page(){return <QuickPublishClient/>}
+import {redirect} from 'next/navigation';
+export default function QuickPublishLegacy(){redirect('/publish?tab=quick')}

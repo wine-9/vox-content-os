@@ -1,5 +1,5 @@
 import "./globals.css";
-import { Nav } from "../components/Nav";
+import { Nav, SideNav } from "../components/Nav";
 
 export const metadata = {
   title: "VOX Content OS",
@@ -10,10 +10,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="zh-CN">
       <body>
-        <main className="shell">
+        <div className="shell">
           <Nav />
-          {children}
-        </main>
+          <div className="app-layout">
+            <SideNav />
+            <main className="main-content">{children}</main>
+          </div>
+        </div>
       </body>
     </html>
   );

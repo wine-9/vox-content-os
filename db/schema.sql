@@ -10,7 +10,7 @@ create table if not exists topics (
 create table if not exists content_items (
   id uuid primary key default gen_random_uuid(), topic_id uuid not null references topics(id),
   content_state text not null default 'awaiting_viewpoint', publish_state text not null default 'dry_run',
-  user_raw_input text, final_text text, created_at timestamptz not null default now(), updated_at timestamptz not null default now()
+  user_raw_input text, final_text text, source_kind text not null default 'topic', created_at timestamptz not null default now(), updated_at timestamptz not null default now()
 );
 create table if not exists skill_proposals (
   id uuid primary key default gen_random_uuid(), batch_key text not null, proposal_json jsonb not null,
@@ -63,6 +63,12 @@ create table if not exists html_visual_variants (
   theme_key text not null, label text not null, base_file_path text not null, status text not null default 'generated',
   created_at timestamptz not null default now(), updated_at timestamptz not null default now(), selected_at timestamptz, unique(package_id,theme_key)
 );
+create table if not exists html_visual_generation_jobs (
+  id uuid primary key default gen_random_uuid(), package_id uuid not null references publish_packages(id) on delete cascade,
+  theme_key text not null, label text not null, output_file_path text not null,
+  status text not null default 'generating', error_text text,
+  created_at timestamptz not null default now(), updated_at timestamptz not null default now(), unique(package_id,theme_key)
+);
 create table if not exists html_visual_revisions (
   id uuid primary key default gen_random_uuid(), variant_id uuid not null references html_visual_variants(id) on delete cascade,
   revision_no integer not null, file_path text not null, edit_instruction text not null, is_final boolean not null default false,
@@ -71,7 +77,7 @@ create table if not exists html_visual_revisions (
 create table if not exists cover_specs (
   package_id uuid primary key references publish_packages(id) on delete cascade,
   skill_key text not null default 'gc-minimal-zine-poster-v0-1', status text not null default 'not_started', font_mode text not null default 'serif',
-  logo_asset_path text, notes text, visual_asset_path text, cover_html_path text, cover_png_path text,
+  logo_asset_path text, notes text, generation_id uuid, visual_asset_path text, cover_html_path text, cover_png_path text,
   model_name text, prompt_text text, error_text text, updated_at timestamptz not null default now()
 );
 create table if not exists cover_revisions (
@@ -91,6 +97,27 @@ create table if not exists platform_adaptation_revisions (
   id uuid primary key default gen_random_uuid(), adaptation_id uuid not null references platform_adaptations(id) on delete cascade,
   revision_no integer not null, files_json jsonb not null, edit_instruction text, model_name text,
   created_at timestamptz not null default now(), unique(adaptation_id,revision_no)
+);
+
+-- Per-content pre-writing calibration. These records deliberately keep source
+-- messages and correction-friendly observations local to one article; they are
+-- not a creator personality profile or a cross-content learning model.
+create table if not exists creator_calibrations (
+  content_item_id uuid primary key references content_items(id) on delete cascade,
+  mode text not null default 'undecided' check (mode in ('undecided','chat','direct')),
+  status text not null default 'not_started', direct_text text, brief_json jsonb,
+  last_error text, created_at timestamptz not null default now(), updated_at timestamptz not null default now()
+);
+create table if not exists creator_calibration_messages (
+  id uuid primary key default gen_random_uuid(), content_item_id uuid not null references content_items(id) on delete cascade,
+  role text not null check (role in ('user','assistant')), body text not null, stage text, metadata_json jsonb,
+  created_at timestamptz not null default now()
+);
+create table if not exists creator_calibration_observations (
+  id uuid primary key default gen_random_uuid(), content_item_id uuid not null references content_items(id) on delete cascade,
+  kind text not null, value text not null, source_message_id uuid references creator_calibration_messages(id) on delete set null,
+  confidence numeric not null default .5, status text not null default 'candidate', correction_text text,
+  created_at timestamptz not null default now(), updated_at timestamptz not null default now()
 );
 
 CREATE TABLE IF NOT EXISTS platform_publish_jobs(id TEXT PRIMARY KEY,content_item_id TEXT NOT NULL,platform TEXT NOT NULL,action TEXT NOT NULL,status TEXT NOT NULL DEFAULT 'not_started',remote_id TEXT,error_text TEXT,meta_json TEXT,created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,FOREIGN KEY(content_item_id) REFERENCES content_items(id) ON DELETE CASCADE);

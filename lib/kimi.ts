@@ -1,4 +1,6 @@
 import {CONTROL_PROMPT,HUMAN_WRITING_PROMPT,ULTIMATE_FUSION_PROMPT,type WriterKey} from './writer-skills';
+import {getActiveLlmProvider} from './llm-config';
+import {geminiComplete} from './gemini';
 export const KIMI_BASE_URL=process.env.KIMI_BASE_URL||'https://api.moonshot.ai/v1';
 export const KIMI_MODEL=process.env.KIMI_MODEL||'kimi-k2.6';
 type KimiInput={title:string;voxAngle?:string;source?:string;viewpoint:string;skillBody?:string;skillVersion?:string};
@@ -22,6 +24,7 @@ async function readStreamingBody(res:Response,totalMs=300000,idleMs=90000){
   return raw;
 }
 async function kimiComplete(system:string,user:string,temperature=.65,maxTokens=3072){
+  if(getActiveLlmProvider()==='gemini')return geminiComplete(system,user,temperature,maxTokens);
   const key=process.env.KIMI_API_KEY||process.env.MOONSHOT_API_KEY;if(!key)throw new Error('KIMI_API_KEY_MISSING');
   const isK26=/kimi[-_/]?k2\.6/i.test(KIMI_MODEL);let last='KIMI_REQUEST_FAILED';
   for(const endpoint of endpoints(KIMI_BASE_URL)){
@@ -50,6 +53,23 @@ export async function kimiWriterCandidate(input:{writer:WriterKey;viewpoint:stri
   const system=`${base}${learned}`;
   const user=`【当前 Content Brief｜唯一内容来源｜最高优先级】\n${input.viewpoint}\n\n硬规则：只根据上面的当前 Brief 成稿。不要引用、补全或延续任何未出现在本 Brief 中的旧选题、旧标题、旧来源、上一轮 Candidate/Final、人物经历或主题。不要提到盲选、Writer 或 Skill。`;
   return kimiComplete(system,user,.65,3072);
+}
+
+export type CreatorCalibrationReply={reply:string;ready:boolean;brief:any;observations:{kind:string;value:string;confidence?:number}[];model:string};
+export async function kimiCreatorCalibration(input:{title:string;voxAngle?:string;source?:string;messages:{role:string;body:string}[]}) : Promise<CreatorCalibrationReply>{
+  const system=`你是 Sinote 的写前编辑。你的任务不是写文章，也不是做心理咨询或固定问卷；而是以安静、具体、有判断力的编辑对话，帮助创作者把一条模糊想法收敛成可写的内容理解。
+
+只使用用户在当前对话里说出的事实、经历、判断和给出的选题资料；绝不补造经历、人物、数据或结论。优先保留用户原话中的自然表达。每轮只问一个信息增量最高的问题，不要罗列问题、不要套模板。通常在用户 3–7 次有信息的回答后收束；若一开始已经够写，可在 1–3 次后收束。用户说“不知道/说不清”时，不追问抽象立场，改问一个小而具体的时刻、对象、反例或困扰。若已经能清楚写出：要讨论的问题、用户判断、至少一个真实经历或例子、内容入口/角度，就应结束追问。
+
+只返回严格 JSON，不要 markdown 或额外文字：
+{"reply":"给用户看的自然中文回复；准备好时必须包含‘我大概知道你真正想讲什么了。’且不能再提问","ready":true|false,"brief":{"starting_idea":"","problem":"","user_judgment":"","experiences":[],"examples":[],"counterarguments":[],"boundaries":[],"angle":"","desired_reader_reaction":"","useful_original_quotes":[],"evidence_needed":[],"conversation_summary":""},"observations":[{"kind":"problem|judgment|experience|example|boundary|angle|quote","value":"只摘取本轮或先前用户明确说过的内容","confidence":0.0}]}
+
+brief 每轮都应是基于当前对话的可编辑工作稿；未知字段留空或空数组。不要把选题资料误当成用户经历。`;
+  const transcript=input.messages.map(m=>`${m.role==='assistant'?'Sinote':'创作者'}：${m.body}`).join('\n\n');
+  const user=`【当前选题】\n标题：${input.title}\n选题入口：${input.voxAngle||'未提供'}\n资料摘要：${input.source||'未提供'}\n\n【对话记录】\n${transcript||'尚未开始。请先用一句自然、具体的问题邀请创作者说说他/她真正想讲的事。'}`;
+  const r=await kimiComplete(system,user,.45,2200),o=parseJson(r.text);
+  if(!o||typeof o.reply!=='string'||typeof o.ready!=='boolean'||!o.brief)throw new Error('KIMI_CALIBRATION_INVALID_RESPONSE');
+  return {reply:o.reply.trim(),ready:Boolean(o.ready),brief:o.brief,observations:Array.isArray(o.observations)?o.observations:[],model:r.model};
 }
 
 export async function kimiWrite(input:KimiInput){return kimiWriterCandidate({writer:'control',viewpoint:input.viewpoint})}

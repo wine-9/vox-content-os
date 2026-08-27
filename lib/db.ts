@@ -4,6 +4,9 @@ import path from 'node:path';
 import { randomUUID } from 'node:crypto';
 
 export type ResearchItem = { id:string; source:string; title:string; url?:string; author?:string; summary?:string; publishedAt?:string; query?:string; engagement?:Record<string,unknown> };
+export type CreatorBrief={starting_idea:string;problem:string;user_judgment:string;experiences:string[];examples:string[];counterarguments:string[];boundaries:string[];angle:string;desired_reader_reaction:string;useful_original_quotes:string[];evidence_needed:string[];conversation_summary:string};
+export type CreatorCalibrationMode='undecided'|'chat'|'direct';
+export const emptyCreatorBrief=():CreatorBrief=>({starting_idea:'',problem:'',user_judgment:'',experiences:[],examples:[],counterarguments:[],boundaries:[],angle:'',desired_reader_reaction:'',useful_original_quotes:[],evidence_needed:[],conversation_summary:''});
 const dataDir=path.join(process.cwd(),'data'); mkdirSync(dataDir,{recursive:true});
 const db=new DatabaseSync(process.env.SQLITE_PATH || path.join(dataDir,'vox-content-os.sqlite'));
 db.exec('PRAGMA journal_mode=WAL; PRAGMA foreign_keys=ON;');
@@ -19,8 +22,9 @@ CREATE TABLE IF NOT EXISTS skill_versions(id TEXT PRIMARY KEY,version TEXT NOT N
 CREATE TABLE IF NOT EXISTS publish_packages(id TEXT PRIMARY KEY,content_item_id TEXT NOT NULL,platform TEXT NOT NULL,title TEXT NOT NULL,body TEXT NOT NULL,visual_prompt TEXT,status TEXT NOT NULL DEFAULT 'package_ready',render_status TEXT NOT NULL DEFAULT 'not_started',model_name TEXT,created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,UNIQUE(content_item_id,platform),FOREIGN KEY(content_item_id) REFERENCES content_items(id) ON DELETE CASCADE);
 CREATE TABLE IF NOT EXISTS rendered_assets(id TEXT PRIMARY KEY,package_id TEXT NOT NULL,kind TEXT NOT NULL,file_path TEXT NOT NULL,width INTEGER,height INTEGER,model_name TEXT,created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,FOREIGN KEY(package_id) REFERENCES publish_packages(id) ON DELETE CASCADE);
 CREATE TABLE IF NOT EXISTS html_visual_variants(id TEXT PRIMARY KEY,package_id TEXT NOT NULL,theme_key TEXT NOT NULL,label TEXT NOT NULL,base_file_path TEXT NOT NULL,status TEXT NOT NULL DEFAULT 'generated',created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,selected_at TEXT,UNIQUE(package_id,theme_key),FOREIGN KEY(package_id) REFERENCES publish_packages(id) ON DELETE CASCADE);
+CREATE TABLE IF NOT EXISTS html_visual_generation_jobs(id TEXT PRIMARY KEY,package_id TEXT NOT NULL,theme_key TEXT NOT NULL,label TEXT NOT NULL,output_file_path TEXT NOT NULL,status TEXT NOT NULL DEFAULT 'generating',error_text TEXT,created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,UNIQUE(package_id,theme_key),FOREIGN KEY(package_id) REFERENCES publish_packages(id) ON DELETE CASCADE);
 CREATE TABLE IF NOT EXISTS html_visual_revisions(id TEXT PRIMARY KEY,variant_id TEXT NOT NULL,revision_no INTEGER NOT NULL,file_path TEXT NOT NULL,edit_instruction TEXT NOT NULL,is_final INTEGER NOT NULL DEFAULT 0,created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,UNIQUE(variant_id,revision_no),FOREIGN KEY(variant_id) REFERENCES html_visual_variants(id) ON DELETE CASCADE);
-CREATE TABLE IF NOT EXISTS cover_specs(package_id TEXT PRIMARY KEY,skill_key TEXT NOT NULL DEFAULT 'gc-minimal-zine-poster-v0-1',status TEXT NOT NULL DEFAULT 'dormant',font_mode TEXT NOT NULL DEFAULT 'serif',logo_asset_path TEXT,notes TEXT,updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,FOREIGN KEY(package_id) REFERENCES publish_packages(id) ON DELETE CASCADE);
+CREATE TABLE IF NOT EXISTS cover_specs(package_id TEXT PRIMARY KEY,skill_key TEXT NOT NULL DEFAULT 'gc-minimal-zine-poster-v0-1',status TEXT NOT NULL DEFAULT 'dormant',font_mode TEXT NOT NULL DEFAULT 'serif',logo_asset_path TEXT,notes TEXT,generation_id TEXT,updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,FOREIGN KEY(package_id) REFERENCES publish_packages(id) ON DELETE CASCADE);
 CREATE TABLE IF NOT EXISTS cover_revisions(id TEXT PRIMARY KEY,package_id TEXT NOT NULL,revision_no INTEGER NOT NULL,edit_instruction TEXT NOT NULL,visual_asset_path TEXT NOT NULL,cover_html_path TEXT NOT NULL,cover_png_path TEXT NOT NULL,prompt_text TEXT,model_name TEXT,created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,UNIQUE(package_id,revision_no),FOREIGN KEY(package_id) REFERENCES publish_packages(id) ON DELETE CASCADE);
 CREATE TABLE IF NOT EXISTS platform_adaptations(id TEXT PRIMARY KEY,content_item_id TEXT NOT NULL,source_package_id TEXT NOT NULL,platform TEXT NOT NULL,status TEXT NOT NULL DEFAULT 'not_started',current_revision_no INTEGER NOT NULL DEFAULT 0,files_json TEXT,model_name TEXT,last_instruction TEXT,error_text TEXT,created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,UNIQUE(content_item_id,platform),FOREIGN KEY(content_item_id) REFERENCES content_items(id) ON DELETE CASCADE,FOREIGN KEY(source_package_id) REFERENCES publish_packages(id) ON DELETE CASCADE);
 CREATE TABLE IF NOT EXISTS platform_adaptation_revisions(id TEXT PRIMARY KEY,adaptation_id TEXT NOT NULL,revision_no INTEGER NOT NULL,files_json TEXT NOT NULL,edit_instruction TEXT,model_name TEXT,created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,UNIQUE(adaptation_id,revision_no),FOREIGN KEY(adaptation_id) REFERENCES platform_adaptations(id) ON DELETE CASCADE);
@@ -41,6 +45,7 @@ try{db.exec(`ALTER TABLE article_versions ADD COLUMN writer_key TEXT`)}catch{}
 try{db.exec(`ALTER TABLE article_versions ADD COLUMN candidate_set_id TEXT`)}catch{}
 try{db.exec(`ALTER TABLE publish_packages ADD COLUMN render_status TEXT NOT NULL DEFAULT 'not_started'`)}catch{}
 try{db.exec(`ALTER TABLE publish_packages ADD COLUMN social_caption TEXT`)}catch{}
+try{db.exec(`ALTER TABLE cover_specs ADD COLUMN generation_id TEXT`)}catch{}
 try{db.exec(`ALTER TABLE cover_specs ADD COLUMN visual_asset_path TEXT`)}catch{}
 try{db.exec(`ALTER TABLE cover_specs ADD COLUMN cover_html_path TEXT`)}catch{}
 try{db.exec(`ALTER TABLE cover_specs ADD COLUMN cover_png_path TEXT`)}catch{}
@@ -54,6 +59,9 @@ CREATE TABLE IF NOT EXISTS content_predictions(id TEXT PRIMARY KEY,content_item_
 CREATE TABLE IF NOT EXISTS performance_snapshots(id TEXT PRIMARY KEY,content_item_id TEXT NOT NULL,asset_id TEXT,platform TEXT NOT NULL,window_label TEXT NOT NULL DEFAULT 'T+3',views INTEGER NOT NULL DEFAULT 0,likes INTEGER NOT NULL DEFAULT 0,comments INTEGER NOT NULL DEFAULT 0,shares INTEGER NOT NULL DEFAULT 0,saves INTEGER NOT NULL DEFAULT 0,followers_gained INTEGER NOT NULL DEFAULT 0,captured_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,UNIQUE(content_item_id,asset_id,platform,window_label),FOREIGN KEY(content_item_id) REFERENCES content_items(id) ON DELETE CASCADE);
 CREATE TABLE IF NOT EXISTS performance_rubric_versions(id TEXT PRIMARY KEY,version TEXT NOT NULL UNIQUE,weights_json TEXT NOT NULL,notes TEXT,status TEXT NOT NULL DEFAULT 'active',created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);
 CREATE TABLE IF NOT EXISTS audience_signals(id TEXT PRIMARY KEY,content_item_id TEXT,platform TEXT,signal_type TEXT NOT NULL,signal_text TEXT NOT NULL,evidence_json TEXT,confidence REAL,created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP);
+CREATE TABLE IF NOT EXISTS creator_calibrations(content_item_id TEXT PRIMARY KEY,mode TEXT NOT NULL DEFAULT 'undecided',status TEXT NOT NULL DEFAULT 'not_started',direct_text TEXT,brief_json TEXT,last_error TEXT,created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,FOREIGN KEY(content_item_id) REFERENCES content_items(id) ON DELETE CASCADE);
+CREATE TABLE IF NOT EXISTS creator_calibration_messages(id TEXT PRIMARY KEY,content_item_id TEXT NOT NULL,role TEXT NOT NULL,body TEXT NOT NULL,stage TEXT,metadata_json TEXT,created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,FOREIGN KEY(content_item_id) REFERENCES content_items(id) ON DELETE CASCADE);
+CREATE TABLE IF NOT EXISTS creator_calibration_observations(id TEXT PRIMARY KEY,content_item_id TEXT NOT NULL,kind TEXT NOT NULL,value TEXT NOT NULL,source_message_id TEXT,confidence REAL NOT NULL DEFAULT 0.5,status TEXT NOT NULL DEFAULT 'candidate',correction_text TEXT,created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,FOREIGN KEY(content_item_id) REFERENCES content_items(id) ON DELETE CASCADE,FOREIGN KEY(source_message_id) REFERENCES creator_calibration_messages(id) ON DELETE SET NULL);
 `);
 try{db.prepare(`INSERT INTO performance_rubric_versions(id,version,weights_json,notes,status) VALUES (?,?,?,?,?)`).run(randomUUID(),'vox-performance-v1',JSON.stringify({topicStrength:.16,hook:.18,clarity:.14,commentPotential:.14,shareSavePotential:.18,voxFit:.20}),'Cold-start rubric; upgrade only after enough T+3 samples.','active')}catch{}
 
@@ -65,9 +73,205 @@ function mapTopicRow(r:any){const score=+(Number(r.freshness||0)*.22+Number(r.vo
 export function listTopics(limit=20){const rows=db.prepare(`SELECT id,title,column_key as column,why_now as whyNow,vox_angle as voxAngle,source_summary as source,source_url as sourceUrl,freshness_score as freshness,vox_fit_score as voxFit,audible_score as audible,suggested_format as format,status FROM topics WHERE status='proposed' AND vox_fit_score>=5.5 AND source_summary NOT LIKE '抖音热点词%' ORDER BY (freshness_score*.22+vox_fit_score*.38+audible_score*.40) DESC,created_at DESC LIMIT 160`).all() as any[];const bucket=(x:any)=>{const s=String(x.source||'');return s.startsWith('抖音 ·')?'douyin':s.startsWith('小红书 ·')?'xhs':s.startsWith('OmniSeek ·')?'omniseek':'industry'};const family=(x:any)=>{const t=String(x.title||'').toLowerCase();if(/(?:ai|人工智能).{0,8}(?:版权|著作权)|(?:版权|著作权).{0,8}(?:ai|人工智能)/i.test(t))return'aiCopyright';if(/演唱会|巡演|音乐节|演出|livehouse|concert|tour/i.test(t))return'live';if(/摇滚|乐队|朋克|爵士|专辑|band|rock|punk|jazz|album/i.test(t))return'bandHistory';if(/音乐行业|厂牌|唱片|流媒体|音乐平台|音乐人|版权|music industry|label|streaming|royalty/i.test(t))return'industry';if(/学音乐|教学|练琴|乐理|和弦|编曲|混音|录音|吉他|贝斯|鼓|键盘|钢琴|lesson|practice/i.test(t))return'learning';return'other'};const sourceCaps:any={douyin:6,xhs:6,omniseek:8,industry:8},familyCaps:any={aiCopyright:2,live:4,bandHistory:6,industry:5,learning:4,other:4};const usedSource:any={douyin:0,xhs:0,omniseek:0,industry:0},usedFamily:any={aiCopyright:0,live:0,bandHistory:0,industry:0,learning:0,other:0},out:any[]=[];const add=(r:any,checkSource=true,checkFamily=true)=>{const b=bucket(r),f=family(r);if(checkSource&&usedSource[b]>=sourceCaps[b])return;if(checkFamily&&usedFamily[f]>=familyCaps[f])return;if(out.some(x=>x.id===r.id))return;out.push(mapTopicRow(r));usedSource[b]++;usedFamily[f]++};for(const r of rows){add(r,true,true);if(out.length>=limit)break}if(out.length<limit)for(const r of rows){add(r,false,true);if(out.length>=limit)break}if(out.length<limit)for(const r of rows){add(r,false,false);if(out.length>=limit)break}return out.slice(0,limit).sort((a:any,b:any)=>Number(b.score||0)-Number(a.score||0));}
 export function listSavedTopics(limit=50){return (db.prepare(`SELECT id,title,column_key as column,why_now as whyNow,vox_angle as voxAngle,source_summary as source,source_url as sourceUrl,freshness_score as freshness,vox_fit_score as voxFit,audible_score as audible,suggested_format as format,status,created_at as createdAt FROM topics WHERE status='saved' ORDER BY created_at DESC LIMIT ?`).all(limit) as any[]).map(mapTopicRow)}
 export function setTopicSaved(topicId:string,saved:boolean){const exists=db.prepare(`SELECT id,status FROM topics WHERE id=?`).get(topicId) as any;if(!exists)throw new Error('topic not found');if(exists.status==='selected'&&!saved)throw new Error('selected topic cannot be unsaved');db.prepare(`UPDATE topics SET status=? WHERE id=?`).run(saved?'saved':'proposed',topicId);return saved?'saved':'proposed'}
-export function selectTopic(topicId:string){db.prepare(`UPDATE topics SET status='selected' WHERE id=?`).run(topicId);const id=randomUUID();db.prepare(`INSERT INTO content_items(id,topic_id) VALUES (?,?)`).run(id,topicId);return id;}
-export function getContent(id?:string){const row=id?db.prepare(`SELECT c.*,t.title topic_title,t.vox_angle,t.source_summary FROM content_items c JOIN topics t ON t.id=c.topic_id WHERE c.id=?`).get(id):db.prepare(`SELECT c.*,t.title topic_title,t.vox_angle,t.source_summary FROM content_items c JOIN topics t ON t.id=c.topic_id ORDER BY c.updated_at DESC LIMIT 1`).get();if(!row)return null;const r:any=row;r.versions=db.prepare(`SELECT id,version_type,body,model_name,skill_version_id,writer_key,candidate_set_id,created_at FROM article_versions WHERE content_item_id=? ORDER BY created_at`).all(r.id);
-r.blindSet=getLatestCandidateSet(r.id);r.labels=db.prepare(`SELECT label,created_at FROM learning_labels WHERE content_item_id=?`).all(r.id);r.observations=db.prepare(`SELECT * FROM diff_observations WHERE content_item_id=? ORDER BY created_at DESC`).all(r.id);r.archive=getContentArchive(r.id);return r;}
+export function selectTopic(topicId:string){
+  const id=randomUUID();
+  db.exec('BEGIN IMMEDIATE');
+  try{
+    const topic=db.prepare(`SELECT id FROM topics WHERE id=?`).get(topicId) as any;
+    if(!topic)throw new Error('选题不存在或已失效，请刷新选题后重试');
+    db.prepare(`INSERT INTO content_items(id,topic_id) VALUES (?,?)`).run(id,topicId);
+    db.prepare(`UPDATE topics SET status='selected' WHERE id=?`).run(topicId);
+    db.exec('COMMIT');
+    return id;
+  }catch(e){
+    try{db.exec('ROLLBACK')}catch{}
+    throw e;
+  }
+}
+export function createManualTopic(input:{title:string;notes?:string}){
+  const title=String(input.title||'').trim().replace(/\s+/g,' ').slice(0,140);
+  const notes=String(input.notes||'').trim().slice(0,3000);
+  if([...title].length<2)throw new Error('请先写下一句你想讨论的话题。');
+  const topicId=`manual-${randomUUID()}`,contentId=randomUUID();
+  db.exec('BEGIN IMMEDIATE');
+  try{
+    // A quick repeat of the same submit should resume the just-created task,
+    // rather than quietly creating two indistinguishable writing tasks.
+    const duplicate=db.prepare(`SELECT c.id FROM content_items c JOIN topics t ON t.id=c.topic_id
+      WHERE c.source_kind='manual_topic' AND t.title=? AND COALESCE(c.user_raw_input,'')=?
+        AND c.created_at>=datetime('now','-2 minutes') ORDER BY c.created_at DESC LIMIT 1`).get(title,notes) as any;
+    if(duplicate){db.exec('COMMIT');return{topicId:null,contentId:String(duplicate.id),reused:true};}
+    const source=notes?`用户补充说明：${notes}`:'用户主动发起的话题；可以先和 Sinote 聊聊，把模糊的想法澄清成可写的内容。';
+    db.prepare(`INSERT INTO topics(id,title,column_key,why_now,vox_angle,source_summary,freshness_score,vox_fit_score,audible_score,suggested_format,status) VALUES (?,?,?,?,?,?,?,?,?,?,'selected')`).run(topicId,title,'manual','用户主动发起','从自己的问题、经历或一个模糊念头出发，由写前对话一起澄清。',source,5,8,8,'自定义内容');
+    db.prepare(`INSERT INTO content_items(id,topic_id,user_raw_input,source_kind) VALUES (?,?,?,'manual_topic')`).run(contentId,topicId,notes||null);
+    db.exec('COMMIT');
+    return{topicId,contentId,reused:false};
+  }catch(error){
+    try{db.exec('ROLLBACK')}catch{}
+    throw error;
+  }
+}
+export function getContent(id?:string){
+  // Deliberately never fall back to the newest item. A missing id is a route
+  // state, not a request for whichever historical draft happened to update last.
+  if(!id)return null;
+  const row=db.prepare(`SELECT c.*,t.title topic_title,t.vox_angle,t.source_summary FROM content_items c JOIN topics t ON t.id=c.topic_id WHERE c.id=?`).get(id);
+  if(!row)return null;
+  const r:any=row;
+  r.versions=db.prepare(`SELECT id,version_type,body,model_name,skill_version_id,writer_key,candidate_set_id,created_at FROM article_versions WHERE content_item_id=? ORDER BY created_at`).all(r.id);
+  r.blindSet=getLatestCandidateSet(r.id);
+  r.labels=db.prepare(`SELECT label,created_at FROM learning_labels WHERE content_item_id=?`).all(r.id);
+  r.observations=db.prepare(`SELECT * FROM diff_observations WHERE content_item_id=? ORDER BY created_at DESC`).all(r.id);
+  r.archive=getContentArchive(r.id);
+  r.calibration=getCreatorCalibration(r.id);
+  r.calibrationEligible=isCreatorCalibrationEligible(r.id);
+  return r;
+}
+const contentPlatformLabels:Record<string,string>={wechat:'公众号',wechat_long_image:'公众号',xiaohongshu:'小红书',douyin:'抖音'};
+function contentStep(contentState:string,publishState:string,hasFinal:boolean){
+  if(publishState==='ready_to_publish')return 'publish';
+  if(['master_approved','platform_adapting'].includes(publishState))return 'visual';
+  if(hasFinal||publishState==='wechat_copy_approved')return 'visual';
+  if(contentState==='blind_review')return 'choose';
+  if(contentState==='editing')return 'final';
+  if(contentState==='generating_candidates')return 'draft';
+  return 'viewpoint';
+}
+function contentDoneSteps(current:string){const order=['viewpoint','draft','choose','final','visual','publish'];const i=order.indexOf(current);return i>0?order.slice(0,i):[];}
+function contentStatusLabel(row:any,results:any[],hasFinal:boolean){
+  if(results.some(x=>x.status==='succeeded'))return '已发布';
+  if(results.some(x=>x.status==='failed'))return '发布失败';
+  if(row.publish_state==='ready_to_publish')return '待发布';
+  if(['wechat_copy_approved','master_approved','platform_adapting'].includes(row.publish_state))return '制作中';
+  if(row.content_state==='blind_review')return '待确认';
+  if(['generating_candidates','editing'].includes(row.content_state))return row.content_state==='editing'?'待确认':'制作中';
+  if(hasFinal||row.content_state==='final_approved')return '待发布';
+  return '草稿中';
+}
+function contentNextAction(row:any,statusLabel:string,current:string){
+  const id=encodeURIComponent(row.id);
+  if(statusLabel==='已发布')return{label:'查看详情',href:`/content/${id}`};
+  if(statusLabel==='发布失败')return{label:'查看发布问题',href:`/release/publish?id=${id}`};
+  if(current==='viewpoint'||current==='draft'||current==='choose'||current==='final')return{label:current==='viewpoint'?'开始写作':'继续制作',href:`/editor?id=${id}`};
+  if(current==='visual')return{label:'继续做视觉',href:`/publish?id=${id}`};
+  return{label:'进入发布',href:`/release/publish?id=${id}`};
+}
+export function listContentLibrary(limit=300){
+  const rows=db.prepare(`SELECT c.id,c.content_state,c.publish_state,c.source_kind,c.final_text,c.created_at,c.updated_at,t.title topic_title FROM content_items c LEFT JOIN topics t ON t.id=c.topic_id ORDER BY c.updated_at DESC LIMIT ?`).all(limit) as any[];
+  const archiveRows=db.prepare(`SELECT content_item_id,platform,status,remote_id,created_at,updated_at FROM publish_archives ORDER BY created_at DESC`).all() as any[];
+  const jobRows=db.prepare(`SELECT content_item_id,platform,action,status,remote_id,error_text,created_at,updated_at FROM platform_publish_jobs ORDER BY created_at DESC`).all() as any[];
+  const packages=db.prepare(`SELECT content_item_id,platform,status,updated_at FROM publish_packages`).all() as any[];
+  const byContent:any={};
+  for(const r of [...archiveRows,...jobRows]){if(!byContent[r.content_item_id])byContent[r.content_item_id]={};const old=byContent[r.content_item_id][r.platform];if(!old||String(r.created_at)>String(old.created_at))byContent[r.content_item_id][r.platform]=r;}
+  const out=rows.map((row:any)=>{
+    const versions=db.prepare(`SELECT 1 FROM article_versions WHERE content_item_id=? AND version_type='final' LIMIT 1`).get(row.id);
+    const results=Object.values(byContent[row.id]||{}) as any[];
+    const current=contentStep(row.content_state,row.publish_state,Boolean(versions));
+    const statusLabel=contentStatusLabel(row,results,Boolean(versions));
+    const platformResults=results.sort((a:any,b:any)=>String(a.platform).localeCompare(String(b.platform))).map((r:any)=>({platform:r.platform,platformLabel:contentPlatformLabels[r.platform]||r.platform,status:r.status,statusLabel:r.status==='succeeded'?'已发布':r.status==='failed'?'发布失败':r.status==='running'?'发布中':'待处理',remoteId:r.remote_id||null,error:r.error_text||null}));
+    const packageRows=packages.filter((p:any)=>p.content_item_id===row.id);
+    const outcome=platformResults.length?platformResults.map((r:any)=>`${r.platformLabel}${r.status==='succeeded'?'已发布':r.status==='failed'?'发布失败':'处理中'}`).join(' · '):'尚未发布';
+    return{...row,title:row.topic_title||'未命名内容',updatedAt:row.updated_at,createdAt:row.created_at,statusLabel,currentStep:current,doneSteps:contentDoneSteps(current),nextAction:contentNextAction(row,statusLabel,current),publishOutcome:outcome,platformResults,historyCount:archiveRows.filter((x:any)=>x.content_item_id===row.id).length,packageCount:packageRows.length,sourceLabel:row.source_kind==='imported_video'?'外部成品':row.source_kind==='manual_topic'?'我的选题':'选题',hasFinal:Boolean(versions)};
+  }).sort((a:any,b:any)=>{const rank=(x:any)=>x.statusLabel==='已发布'?0:x.statusLabel==='发布失败'?1:2;return rank(a)-rank(b)||String(b.updatedAt).localeCompare(String(a.updatedAt))});
+  return out;
+}
+export function getContentLibraryItem(id:string){return listContentLibrary(500).find((x:any)=>x.id===id)||null;}
+export function listUnfinishedContent(limit=24){
+  const rows=db.prepare(`SELECT c.id,c.content_state,c.publish_state,c.updated_at,t.title topic_title
+    FROM content_items c JOIN topics t ON t.id=c.topic_id
+    WHERE c.content_state IN ('awaiting_viewpoint','generating_candidates','blind_review','editing','blind_rejected')
+      AND COALESCE(TRIM(c.final_text),'')=''
+    ORDER BY c.updated_at DESC LIMIT ?`).all(limit) as any[];
+  return rows.map((r:any)=>({id:r.id,title:r.topic_title||'未命名内容',contentState:r.content_state,updatedAt:r.updated_at,
+    stateLabel:r.content_state==='awaiting_viewpoint'?'等待开始':r.content_state==='generating_candidates'?'正在生成':r.content_state==='blind_review'?'等待选稿':r.content_state==='editing'?'等待定稿':'待重新开始'}));
+}
+function safeCreatorJson(value:string|undefined|null,fallback:any){try{return value?JSON.parse(value):fallback}catch{return fallback}}
+function creatorText(value:any,max=2400){return String(value??'').trim().slice(0,max)}
+function creatorList(value:any,max=10){const values=Array.isArray(value)?value:String(value??'').split(/\n+/);return [...new Set(values.map(x=>creatorText(x,900)).filter(Boolean))].slice(0,max)}
+export function normalizeCreatorBrief(value:any):CreatorBrief{
+  const raw=value&&typeof value==='object'?value:{};
+  return {starting_idea:creatorText(raw.starting_idea),problem:creatorText(raw.problem),user_judgment:creatorText(raw.user_judgment),experiences:creatorList(raw.experiences),examples:creatorList(raw.examples),counterarguments:creatorList(raw.counterarguments),boundaries:creatorList(raw.boundaries),angle:creatorText(raw.angle),desired_reader_reaction:creatorText(raw.desired_reader_reaction),useful_original_quotes:creatorList(raw.useful_original_quotes),evidence_needed:creatorList(raw.evidence_needed),conversation_summary:creatorText(raw.conversation_summary,3600)};
+}
+export function getCreatorCalibration(contentId:string){
+  const row=db.prepare(`SELECT * FROM creator_calibrations WHERE content_item_id=?`).get(contentId) as any;
+  if(!row)return null;
+  const messages=(db.prepare(`SELECT id,role,body,stage,metadata_json,created_at FROM creator_calibration_messages WHERE content_item_id=? ORDER BY created_at,id`).all(contentId) as any[]).map((m:any)=>({...m,metadata:safeCreatorJson(m.metadata_json,{})}));
+  const observations=(db.prepare(`SELECT id,kind,value,source_message_id,confidence,status,correction_text,created_at,updated_at FROM creator_calibration_observations WHERE content_item_id=? ORDER BY created_at,id`).all(contentId) as any[]);
+  return {...row,brief:normalizeCreatorBrief(safeCreatorJson(row.brief_json,emptyCreatorBrief())),messages,observations};
+}
+export function isCreatorCalibrationEligible(contentId:string){
+  const item=db.prepare(`SELECT content_state,final_text FROM content_items WHERE id=?`).get(contentId) as any;
+  if(!item||item.content_state!=='awaiting_viewpoint'||String(item.final_text||'').trim())return false;
+  const hasSet=db.prepare(`SELECT id FROM candidate_sets WHERE content_item_id=? LIMIT 1`).get(contentId) as any;
+  const hasFinal=db.prepare(`SELECT id FROM article_versions WHERE content_item_id=? AND version_type='final' LIMIT 1`).get(contentId) as any;
+  return !hasSet&&!hasFinal;
+}
+export function ensureCreatorCalibration(contentId:string,mode:CreatorCalibrationMode='undecided'){
+  const item=db.prepare(`SELECT id FROM content_items WHERE id=?`).get(contentId) as any;
+  if(!item)throw new Error('content not found');
+  db.prepare(`INSERT OR IGNORE INTO creator_calibrations(content_item_id,mode,status,brief_json) VALUES (?,?,'not_started',?)`).run(contentId,mode,JSON.stringify(emptyCreatorBrief()));
+  if(mode!=='undecided')db.prepare(`UPDATE creator_calibrations SET mode=?,updated_at=CURRENT_TIMESTAMP WHERE content_item_id=?`).run(mode,contentId);
+  return getCreatorCalibration(contentId);
+}
+export function setCreatorCalibrationState(contentId:string,input:{mode?:CreatorCalibrationMode;status?:string;lastError?:string|null}){
+  ensureCreatorCalibration(contentId);
+  const old=getCreatorCalibration(contentId);
+  db.prepare(`UPDATE creator_calibrations SET mode=?,status=?,last_error=?,updated_at=CURRENT_TIMESTAMP WHERE content_item_id=?`).run(input.mode||old?.mode||'undecided',input.status||old?.status||'not_started',input.lastError===undefined?old?.last_error||null:input.lastError,contentId);
+  return getCreatorCalibration(contentId);
+}
+export function appendCreatorCalibrationMessage(contentId:string,input:{role:'user'|'assistant';body:string;stage?:string;metadata?:any}){
+  ensureCreatorCalibration(contentId);
+  const body=creatorText(input.body,7000);if(!body)throw new Error('message is required');
+  const id=randomUUID();
+  db.prepare(`INSERT INTO creator_calibration_messages(id,content_item_id,role,body,stage,metadata_json) VALUES (?,?,?,?,?,?)`).run(id,contentId,input.role,body,input.stage||null,input.metadata?JSON.stringify(input.metadata):null);
+  db.prepare(`UPDATE creator_calibrations SET updated_at=CURRENT_TIMESTAMP WHERE content_item_id=?`).run(contentId);
+  return id;
+}
+export function saveCreatorCalibrationObservations(contentId:string,observations:any[],sourceMessageId?:string){
+  for(const raw of observations||[]){
+    const kind=creatorText(raw?.kind,80),value=creatorText(raw?.value,1200);if(!kind||!value)continue;
+    const confidence=Math.max(0,Math.min(1,Number(raw?.confidence)||.5));
+    db.prepare(`INSERT INTO creator_calibration_observations(id,content_item_id,kind,value,source_message_id,confidence,status) VALUES (?,?,?,?,?,?,'candidate')`).run(randomUUID(),contentId,kind,value,sourceMessageId||null,confidence);
+  }
+  return getCreatorCalibration(contentId);
+}
+export function saveCreatorBrief(contentId:string,brief:any,status='brief_ready'){
+  ensureCreatorCalibration(contentId,'chat');const normalized=normalizeCreatorBrief(brief);
+  db.prepare(`UPDATE creator_calibrations SET brief_json=?,status=?,last_error=NULL,updated_at=CURRENT_TIMESTAMP WHERE content_item_id=?`).run(JSON.stringify(normalized),status,contentId);
+  return getCreatorCalibration(contentId);
+}
+export function saveCreatorDirectDraft(contentId:string,directText:string){
+  const text=creatorText(directText,10000);ensureCreatorCalibration(contentId,'direct');
+  db.prepare(`UPDATE creator_calibrations SET mode='direct',status='direct_ready',direct_text=?,last_error=NULL,updated_at=CURRENT_TIMESTAMP WHERE content_item_id=?`).run(text,contentId);
+  db.prepare(`UPDATE content_items SET user_raw_input=?,updated_at=CURRENT_TIMESTAMP WHERE id=?`).run(text,contentId);
+  return getCreatorCalibration(contentId);
+}
+export function creatorWriterContext(calibration:any){
+  const brief=normalizeCreatorBrief(calibration?.brief),userWords=creatorList([...(brief.useful_original_quotes||[]),...((calibration?.messages||[]).filter((m:any)=>m.role==='user').map((m:any)=>m.body))],12);
+  const block=(title:string,value:string|string[])=>{const values=Array.isArray(value)?value:[value];const clean=values.map(x=>creatorText(x,1400)).filter(Boolean);return clean.length?`【${title}】\n${clean.map(x=>`- ${x}`).join('\n')}`:''};
+  return ['【Sinote 写前对话｜用户已确认的写作理解】',block('起始想法',brief.starting_idea),block('要解决的问题',brief.problem),block('用户判断',brief.user_judgment),block('真实经历',brief.experiences),block('具体例子',brief.examples),block('反例 / 边界', [...brief.counterarguments,...brief.boundaries]),block('内容入口',brief.angle),block('希望读者带走什么',brief.desired_reader_reaction),block('仍需核实',brief.evidence_needed),block('对话总结',brief.conversation_summary),block('用户原话（自然表达优先保留）',userWords)].filter(Boolean).join('\n\n');
+}
+export function confirmCreatorBrief(contentId:string,brief:any){
+  const calibration=saveCreatorBrief(contentId,brief,'confirmed');
+  const writerContext=creatorWriterContext(calibration);
+  db.prepare(`UPDATE content_items SET user_raw_input=?,updated_at=CURRENT_TIMESTAMP WHERE id=?`).run(writerContext,contentId);
+  return {calibration:getCreatorCalibration(contentId),writerContext};
+}
+export function getConfirmedCreatorWriterContext(contentId:string){
+  const calibration=getCreatorCalibration(contentId);
+  return calibration?.status==='confirmed'?creatorWriterContext(calibration):null;
+}
+/**
+ * Generation must not rely on a browser keeping the calibration payload alive.
+ * A confirmed Brief is rebuilt from persisted messages + Brief on every request,
+ * so a refresh or an old tab cannot replace it with a stale textarea value.
+ */
+export function resolveGenerationContext(contentId:string,suppliedViewpoint?:unknown){
+  const confirmed=getConfirmedCreatorWriterContext(contentId);
+  if(confirmed)return {writerContext:confirmed,source:'confirmed_calibration' as const};
+  const viewpoint=creatorText(suppliedViewpoint,10000);
+  return viewpoint?{writerContext:viewpoint,source:'viewpoint' as const}:null;
+}
 export function saveGenerated(contentId:string,viewpoint:string,body:string,model:string,skillVersionId?:string){db.prepare(`UPDATE content_items SET user_raw_input=?,content_state='editing',updated_at=CURRENT_TIMESTAMP WHERE id=?`).run(viewpoint,contentId);const id=randomUUID();db.prepare(`INSERT INTO article_versions(id,content_item_id,version_type,body,model_name,skill_version_id) VALUES (?,?,?,?,?,?)`).run(id,contentId,'candidate',body,model,skillVersionId||null);return id;}
 export function getActiveSkill(){return db.prepare(`SELECT id,version,body,changelog,status,source_proposal_id,created_at FROM skill_versions WHERE status='active' ORDER BY created_at DESC LIMIT 1`).get() as any||null;}
 export function beginCandidateSet(contentId:string,briefText:string){
@@ -150,8 +354,8 @@ export function promoteProposal(id:string,body:string){
 }
 
 export function listPublishItems(contentId?:string){const rows=(contentId?db.prepare(`SELECT c.id content_id,c.final_text,c.publish_state,c.updated_at,t.title topic_title FROM content_items c JOIN topics t ON t.id=c.topic_id WHERE c.id=? AND c.final_text IS NOT NULL AND c.final_text<>''`).all(contentId):db.prepare(`SELECT c.id content_id,c.final_text,c.publish_state,c.updated_at,t.title topic_title FROM content_items c JOIN topics t ON t.id=c.topic_id WHERE c.final_text IS NOT NULL AND c.final_text<>'' ORDER BY c.updated_at DESC LIMIT 1`).all()) as any[];for(const r of rows){r.archive=getContentArchive(r.content_id);r.packages=db.prepare(`SELECT id,platform,title,body,visual_prompt,status,render_status,model_name,created_at,updated_at FROM publish_packages WHERE content_item_id=? ORDER BY CASE platform WHEN 'xiaohongshu' THEN 1 WHEN 'wechat_long_image' THEN 2 WHEN 'douyin' THEN 3 ELSE 9 END`).all(r.content_id);for(const p of r.packages)p.assets=db.prepare(`SELECT id,kind,width,height,model_name,created_at FROM rendered_assets WHERE package_id=? ORDER BY created_at,id`).all(p.id)}return rows;}
-export function upsertPublishPackage(contentId:string,platform:string,pkg:{title:string;body:string;visualPrompt:string;model:string}){const existing=db.prepare(`SELECT id FROM publish_packages WHERE content_item_id=? AND platform=?`).get(contentId,platform) as any;const id=existing?.id||randomUUID();db.prepare(`INSERT INTO publish_packages(id,content_item_id,platform,title,body,visual_prompt,status,model_name) VALUES (?,?,?,?,?,?,'package_ready',?) ON CONFLICT(content_item_id,platform) DO UPDATE SET title=excluded.title,body=excluded.body,visual_prompt=excluded.visual_prompt,status='package_ready',render_status='not_started',model_name=excluded.model_name,updated_at=CURRENT_TIMESTAMP`).run(id,contentId,platform,pkg.title,pkg.body,pkg.visualPrompt,pkg.model);db.prepare(`DELETE FROM html_visual_variants WHERE package_id=?`).run(id);db.prepare(`DELETE FROM cover_revisions WHERE package_id=?`).run(id);db.prepare(`UPDATE cover_specs SET status='not_started',visual_asset_path=NULL,cover_html_path=NULL,cover_png_path=NULL,error_text=NULL,updated_at=CURRENT_TIMESTAMP WHERE package_id=?`).run(id);db.prepare(`UPDATE content_items SET publish_state='package_ready',updated_at=CURRENT_TIMESTAMP WHERE id=?`).run(contentId);return id;}
-export function updatePublishPackage(id:string,input:{title:string;body:string;visualPrompt:string}){const p=db.prepare(`SELECT content_item_id FROM publish_packages WHERE id=?`).get(id) as any;if(!p)throw new Error('package not found');db.prepare(`UPDATE publish_packages SET title=?,body=?,visual_prompt=?,status='package_ready',render_status='not_started',updated_at=CURRENT_TIMESTAMP WHERE id=?`).run(input.title,input.body,input.visualPrompt,id);db.prepare(`DELETE FROM html_visual_variants WHERE package_id=?`).run(id);db.prepare(`DELETE FROM cover_revisions WHERE package_id=?`).run(id);db.prepare(`UPDATE cover_specs SET status='not_started',visual_asset_path=NULL,cover_html_path=NULL,cover_png_path=NULL,error_text=NULL,updated_at=CURRENT_TIMESTAMP WHERE package_id=?`).run(id);db.prepare(`UPDATE content_items SET publish_state='package_ready' WHERE id=?`).run(p.content_item_id);}
+export function upsertPublishPackage(contentId:string,platform:string,pkg:{title:string;body:string;visualPrompt:string;model:string}){const existing=db.prepare(`SELECT id FROM publish_packages WHERE content_item_id=? AND platform=?`).get(contentId,platform) as any;const id=existing?.id||randomUUID();db.prepare(`INSERT INTO publish_packages(id,content_item_id,platform,title,body,visual_prompt,status,model_name) VALUES (?,?,?,?,?,?,'package_ready',?) ON CONFLICT(content_item_id,platform) DO UPDATE SET title=excluded.title,body=excluded.body,visual_prompt=excluded.visual_prompt,status='package_ready',render_status='not_started',model_name=excluded.model_name,updated_at=CURRENT_TIMESTAMP`).run(id,contentId,platform,pkg.title,pkg.body,pkg.visualPrompt,pkg.model);db.prepare(`DELETE FROM html_visual_variants WHERE package_id=?`).run(id);db.prepare(`DELETE FROM html_visual_generation_jobs WHERE package_id=?`).run(id);db.prepare(`DELETE FROM cover_revisions WHERE package_id=?`).run(id);db.prepare(`UPDATE cover_specs SET status='not_started',generation_id=NULL,visual_asset_path=NULL,cover_html_path=NULL,cover_png_path=NULL,error_text=NULL,updated_at=CURRENT_TIMESTAMP WHERE package_id=?`).run(id);db.prepare(`UPDATE content_items SET publish_state='package_ready',updated_at=CURRENT_TIMESTAMP WHERE id=?`).run(contentId);return id;}
+export function updatePublishPackage(id:string,input:{title:string;body:string;visualPrompt:string}){const p=db.prepare(`SELECT content_item_id FROM publish_packages WHERE id=?`).get(id) as any;if(!p)throw new Error('package not found');db.prepare(`UPDATE publish_packages SET title=?,body=?,visual_prompt=?,status='package_ready',render_status='not_started',updated_at=CURRENT_TIMESTAMP WHERE id=?`).run(input.title,input.body,input.visualPrompt,id);db.prepare(`DELETE FROM html_visual_variants WHERE package_id=?`).run(id);db.prepare(`DELETE FROM html_visual_generation_jobs WHERE package_id=?`).run(id);db.prepare(`DELETE FROM cover_revisions WHERE package_id=?`).run(id);db.prepare(`UPDATE cover_specs SET status='not_started',generation_id=NULL,visual_asset_path=NULL,cover_html_path=NULL,cover_png_path=NULL,error_text=NULL,updated_at=CURRENT_TIMESTAMP WHERE package_id=?`).run(id);db.prepare(`UPDATE content_items SET publish_state='package_ready' WHERE id=?`).run(p.content_item_id);}
 export function approvePublishPackage(id:string){const p=db.prepare(`SELECT content_item_id,platform FROM publish_packages WHERE id=?`).get(id) as any;if(!p)throw new Error('package not found');db.prepare(`UPDATE publish_packages SET status='publish_approved',updated_at=CURRENT_TIMESTAMP WHERE id=?`).run(id);const state=p.platform==='wechat_long_image'?'wechat_copy_approved':'package_ready';db.prepare(`UPDATE content_items SET publish_state=?,updated_at=CURRENT_TIMESTAMP WHERE id=?`).run(state,p.content_item_id);return state;}
 export function dashboardStats(){const one=(sql:string)=>(db.prepare(sql).get() as any).n as number;return{proposed:one("SELECT COUNT(*) n FROM topics WHERE status='proposed'"),awaiting:one("SELECT COUNT(*) n FROM content_items WHERE content_state='awaiting_viewpoint'"),generatingCandidates:one("SELECT COUNT(*) n FROM content_items WHERE content_state='generating_candidates'"),blindReview:one("SELECT COUNT(*) n FROM content_items WHERE content_state='blind_review'"),editing:one("SELECT COUNT(*) n FROM content_items WHERE content_state='editing'"),finalApproved:one("SELECT COUNT(*) n FROM content_items WHERE content_state='final_approved'"),wechatCopyApproved:one("SELECT COUNT(*) n FROM content_items WHERE publish_state='wechat_copy_approved'"),masterApproved:one("SELECT COUNT(*) n FROM content_items WHERE publish_state='master_approved'"),platformAdapting:one("SELECT COUNT(*) n FROM content_items WHERE publish_state='platform_adapting'"),readyToPublish:one("SELECT COUNT(*) n FROM content_items WHERE publish_state='ready_to_publish'"),pendingProposals:one("SELECT COUNT(*) n FROM skill_proposals WHERE status='pending'"),activeSkills:one("SELECT COUNT(*) n FROM skill_versions WHERE status='active'")};}
 export function stats(){const one=(sql:string)=>(db.prepare(sql).get() as any).n as number;return{research:one('SELECT COUNT(*) n FROM research_items'),topics:one('SELECT COUNT(*) n FROM topics'),content:one('SELECT COUNT(*) n FROM content_items'),finals:one("SELECT COUNT(*) n FROM article_versions WHERE version_type='final'")};}
@@ -162,15 +366,33 @@ export function failPackageRender(id:string){db.prepare(`UPDATE publish_packages
 export function saveRenderedAssets(packageId:string,assets:{filePath:string;width:number;height:number;kind:string;model:string}[]){const ins=db.prepare(`INSERT INTO rendered_assets(id,package_id,kind,file_path,width,height,model_name) VALUES (?,?,?,?,?,?,?)`);for(const a of assets)ins.run(randomUUID(),packageId,a.kind,a.filePath,a.width,a.height,a.model);db.prepare(`UPDATE publish_packages SET render_status='ready',updated_at=CURRENT_TIMESTAMP WHERE id=?`).run(packageId);return db.prepare(`SELECT id,kind,width,height,model_name,created_at FROM rendered_assets WHERE package_id=? ORDER BY created_at,id`).all(packageId);}
 export function getRenderedAsset(id:string){return db.prepare(`SELECT a.*,p.content_item_id FROM rendered_assets a JOIN publish_packages p ON p.id=a.package_id WHERE a.id=?`).get(id) as any||null;}
 
+export const VISUAL_TASK_TIMEOUT_MS=12*60*1000;
+export const COVER_TASK_TIMEOUT_MS=10*60*1000;
+function dbTimeMs(value:any){const s=String(value||'');const t=Date.parse(s.includes('T')?s:`${s.replace(' ','T')}Z`);return Number.isFinite(t)?t:0;}
+function staleTask(value:any,timeoutMs=VISUAL_TASK_TIMEOUT_MS){const t=dbTimeMs(value);return !!t&&(Date.now()-t>timeoutMs);}
+function staleMessage(timeoutMs=VISUAL_TASK_TIMEOUT_MS){return `生成任务超过 ${Math.round(timeoutMs/60000)} 分钟未完成，已标记为超时，请重试。`;}
+function recoverStaleHtmlVisualJobs(packageId?:string){const rows=(packageId?db.prepare(`SELECT id,updated_at FROM html_visual_generation_jobs WHERE package_id=? AND status='generating'`).all(packageId):db.prepare(`SELECT id,updated_at FROM html_visual_generation_jobs WHERE status='generating'`).all()) as any[];for(const r of rows)if(staleTask(r.updated_at))db.prepare(`UPDATE html_visual_generation_jobs SET status='failed',error_text=?,updated_at=CURRENT_TIMESTAMP WHERE id=? AND status='generating'`).run(staleMessage(),r.id);}
+export function getHtmlVisualGenerationJob(id:string){recoverStaleHtmlVisualJobs();return db.prepare(`SELECT * FROM html_visual_generation_jobs WHERE id=?`).get(id) as any||null;}
+export function beginHtmlVisualGeneration(packageId:string,themeKey:string,label:string,outputFilePath:string){
+  recoverStaleHtmlVisualJobs(packageId);
+  const old=db.prepare(`SELECT * FROM html_visual_generation_jobs WHERE package_id=? AND theme_key=?`).get(packageId,themeKey) as any;
+  if(old?.status==='generating')return{accepted:false,alreadyRunning:true,job:old};
+  const id=randomUUID();
+  db.prepare(`INSERT INTO html_visual_generation_jobs(id,package_id,theme_key,label,output_file_path,status,error_text) VALUES (?,?,?,?,?,'generating',NULL) ON CONFLICT(package_id,theme_key) DO UPDATE SET id=excluded.id,label=excluded.label,output_file_path=excluded.output_file_path,status='generating',error_text=NULL,created_at=CURRENT_TIMESTAMP,updated_at=CURRENT_TIMESTAMP`).run(id,packageId,themeKey,label,outputFilePath);
+  return{accepted:true,alreadyRunning:false,job:getHtmlVisualGenerationJob(id)};
+}
+export function completeHtmlVisualGeneration(jobId:string){const job=getHtmlVisualGenerationJob(jobId);if(!job||job.status!=='generating')throw new Error('HTML 视觉生成任务已结束，结果未写入');const v=upsertHtmlVisualVariant(job.package_id,job.theme_key,job.label,job.output_file_path);db.prepare(`UPDATE html_visual_generation_jobs SET status='succeeded',error_text=NULL,updated_at=CURRENT_TIMESTAMP WHERE id=? AND status='generating'`).run(jobId);return{job:getHtmlVisualGenerationJob(jobId),variant:v};}
+export function failHtmlVisualGeneration(jobId:string,error:string){const job=db.prepare(`SELECT id FROM html_visual_generation_jobs WHERE id=?`).get(jobId) as any;if(job)db.prepare(`UPDATE html_visual_generation_jobs SET status='failed',error_text=?,updated_at=CURRENT_TIMESTAMP WHERE id=? AND status='generating'`).run(String(error||'生成失败').slice(0,1500),jobId);return getHtmlVisualGenerationJob(jobId);}
 export function upsertHtmlVisualVariant(packageId:string,themeKey:string,label:string,filePath:string){const old=db.prepare(`SELECT id,status FROM html_visual_variants WHERE package_id=? AND theme_key=?`).get(packageId,themeKey) as any;const id=old?.id||randomUUID();db.prepare(`INSERT INTO html_visual_variants(id,package_id,theme_key,label,base_file_path,status) VALUES (?,?,?,?,?,'generated') ON CONFLICT(package_id,theme_key) DO UPDATE SET label=excluded.label,base_file_path=excluded.base_file_path,updated_at=CURRENT_TIMESTAMP`).run(id,packageId,themeKey,label,filePath);return db.prepare(`SELECT * FROM html_visual_variants WHERE id=?`).get(id) as any;}
 export function ensureCoverSpec(packageId:string){db.prepare(`INSERT INTO cover_specs(package_id,skill_key,status,font_mode,logo_asset_path,notes) VALUES (?,'gc-minimal-zine-poster-v0-1','not_started','serif','public/brand/vox-music-school-logo.png','Codex may use its built-in $imagegen for GC cover artwork. Final title and VOX logo are composited outside the generated artwork for reliability.') ON CONFLICT(package_id) DO UPDATE SET logo_asset_path=COALESCE(cover_specs.logo_asset_path,excluded.logo_asset_path)`).run(packageId);const c:any=db.prepare(`SELECT * FROM cover_specs WHERE package_id=?`).get(packageId);c.revisions=db.prepare(`SELECT * FROM cover_revisions WHERE package_id=? ORDER BY revision_no`).all(packageId);c.current_revision_no=c.revisions.length?c.revisions[c.revisions.length-1].revision_no:0;return c;}
 
-export function beginCoverGeneration(packageId:string){ensureCoverSpec(packageId);db.prepare(`UPDATE cover_specs SET status='generating',error_text=NULL,updated_at=CURRENT_TIMESTAMP WHERE package_id=?`).run(packageId);return ensureCoverSpec(packageId);}
-export function completeCoverGeneration(packageId:string,input:{visualPath:string;htmlPath:string;pngPath:string;model:string;promptText?:string}){invalidateVisualMaster(packageId);ensureCoverSpec(packageId);db.prepare(`DELETE FROM cover_revisions WHERE package_id=?`).run(packageId);db.prepare(`UPDATE cover_specs SET status='ready',visual_asset_path=?,cover_html_path=?,cover_png_path=?,model_name=?,prompt_text=?,error_text=NULL,updated_at=CURRENT_TIMESTAMP WHERE package_id=?`).run(input.visualPath,input.htmlPath,input.pngPath,input.model,input.promptText||null,packageId);return ensureCoverSpec(packageId);}
-export function addCoverRevision(packageId:string,input:{instruction:string;visualPath:string;htmlPath:string;pngPath:string;model:string;promptText?:string}){invalidateVisualMaster(packageId);ensureCoverSpec(packageId);const n=((db.prepare(`SELECT MAX(revision_no) n FROM cover_revisions WHERE package_id=?`).get(packageId) as any)?.n||0)+1;db.prepare(`INSERT INTO cover_revisions(id,package_id,revision_no,edit_instruction,visual_asset_path,cover_html_path,cover_png_path,prompt_text,model_name) VALUES (?,?,?,?,?,?,?,?,?)`).run(randomUUID(),packageId,n,input.instruction,input.visualPath,input.htmlPath,input.pngPath,input.promptText||null,input.model);db.prepare(`UPDATE cover_specs SET status='ready',visual_asset_path=?,cover_html_path=?,cover_png_path=?,model_name=?,prompt_text=?,error_text=NULL,updated_at=CURRENT_TIMESTAMP WHERE package_id=?`).run(input.visualPath,input.htmlPath,input.pngPath,input.model,input.promptText||null,packageId);return ensureCoverSpec(packageId);}
-export function failCoverGeneration(packageId:string,error:string){ensureCoverSpec(packageId);db.prepare(`UPDATE cover_specs SET status='failed',error_text=?,updated_at=CURRENT_TIMESTAMP WHERE package_id=?`).run(error.slice(0,1500),packageId);return ensureCoverSpec(packageId);}
-export function failCoverRevision(packageId:string,error:string){ensureCoverSpec(packageId);db.prepare(`UPDATE cover_specs SET status=CASE WHEN cover_png_path IS NOT NULL THEN 'ready' ELSE 'failed' END,error_text=?,updated_at=CURRENT_TIMESTAMP WHERE package_id=?`).run(error.slice(0,1500),packageId);return ensureCoverSpec(packageId);}
-export function getHtmlVisualState(packageId:string){ensureCoverSpec(packageId);const variants=(db.prepare(`SELECT * FROM html_visual_variants WHERE package_id=? ORDER BY created_at`).all(packageId) as any[]);for(const v of variants){v.revisions=db.prepare(`SELECT * FROM html_visual_revisions WHERE variant_id=? ORDER BY revision_no`).all(v.id);const latest=v.revisions?.length?v.revisions[v.revisions.length-1]:null;v.current_file_path=latest?.file_path||v.base_file_path;v.current_revision_no=latest?.revision_no||0;}const selected=variants.find(v=>v.status==='selected'||v.status==='final')||null;const cover=ensureCoverSpec(packageId);return{variants,selected,cover};}
+export function beginCoverGeneration(packageId:string){ensureCoverSpec(packageId);const generationId=randomUUID();db.prepare(`UPDATE cover_specs SET status='generating',generation_id=?,error_text=NULL,updated_at=CURRENT_TIMESTAMP WHERE package_id=?`).run(generationId,packageId);return ensureCoverSpec(packageId);}
+export function completeCoverGeneration(packageId:string,input:{visualPath:string;htmlPath:string;pngPath:string;model:string;promptText?:string},generationId?:string){const current=ensureCoverSpec(packageId);if(generationId&&current.generation_id!==generationId)throw new Error('封面生成任务已结束，结果未写入');invalidateVisualMaster(packageId);db.prepare(`DELETE FROM cover_revisions WHERE package_id=?`).run(packageId);db.prepare(`UPDATE cover_specs SET status='ready',generation_id=NULL,visual_asset_path=?,cover_html_path=?,cover_png_path=?,model_name=?,prompt_text=?,error_text=NULL,updated_at=CURRENT_TIMESTAMP WHERE package_id=?`).run(input.visualPath,input.htmlPath,input.pngPath,input.model,input.promptText||null,packageId);return ensureCoverSpec(packageId);}
+export function addCoverRevision(packageId:string,input:{instruction:string;visualPath:string;htmlPath:string;pngPath:string;model:string;promptText?:string}){invalidateVisualMaster(packageId);ensureCoverSpec(packageId);const n=((db.prepare(`SELECT MAX(revision_no) n FROM cover_revisions WHERE package_id=?`).get(packageId) as any)?.n||0)+1;db.prepare(`INSERT INTO cover_revisions(id,package_id,revision_no,edit_instruction,visual_asset_path,cover_html_path,cover_png_path,prompt_text,model_name) VALUES (?,?,?,?,?,?,?,?,?)`).run(randomUUID(),packageId,n,input.instruction,input.visualPath,input.htmlPath,input.pngPath,input.promptText||null,input.model);db.prepare(`UPDATE cover_specs SET status='ready',generation_id=NULL,visual_asset_path=?,cover_html_path=?,cover_png_path=?,model_name=?,prompt_text=?,error_text=NULL,updated_at=CURRENT_TIMESTAMP WHERE package_id=?`).run(input.visualPath,input.htmlPath,input.pngPath,input.model,input.promptText||null,packageId);return ensureCoverSpec(packageId);}
+export function failCoverGeneration(packageId:string,error:string,generationId?:string){const current=ensureCoverSpec(packageId);if(generationId&&current.generation_id!==generationId)return current;db.prepare(`UPDATE cover_specs SET status='failed',generation_id=NULL,error_text=?,updated_at=CURRENT_TIMESTAMP WHERE package_id=?`).run(String(error||'生成失败').slice(0,1500),packageId);return ensureCoverSpec(packageId);}
+export function failCoverRevision(packageId:string,error:string){ensureCoverSpec(packageId);db.prepare(`UPDATE cover_specs SET status=CASE WHEN cover_png_path IS NOT NULL THEN 'ready' ELSE 'failed' END,generation_id=NULL,error_text=?,updated_at=CURRENT_TIMESTAMP WHERE package_id=?`).run(error.slice(0,1500),packageId);return ensureCoverSpec(packageId);}
+export function recoverStaleCoverGeneration(packageId:string){const c=ensureCoverSpec(packageId);if(c.status==='generating'&&staleTask(c.updated_at,COVER_TASK_TIMEOUT_MS)){db.prepare(`UPDATE cover_specs SET status='failed',generation_id=NULL,error_text=?,updated_at=CURRENT_TIMESTAMP WHERE package_id=? AND status='generating'`).run(staleMessage(COVER_TASK_TIMEOUT_MS),packageId);return ensureCoverSpec(packageId);}return c;}
+export function getHtmlVisualState(packageId:string){recoverStaleHtmlVisualJobs(packageId);const variants=(db.prepare(`SELECT * FROM html_visual_variants WHERE package_id=? ORDER BY created_at`).all(packageId) as any[]);for(const v of variants){v.revisions=db.prepare(`SELECT * FROM html_visual_revisions WHERE variant_id=? ORDER BY revision_no`).all(v.id);const latest=v.revisions?.length?v.revisions[v.revisions.length-1]:null;v.current_file_path=latest?.file_path||v.base_file_path;v.current_revision_no=latest?.revision_no||0;}const selected=variants.find(v=>v.status==='selected'||v.status==='final')||null;const cover=recoverStaleCoverGeneration(packageId);const generationJobs=db.prepare(`SELECT * FROM html_visual_generation_jobs WHERE package_id=? ORDER BY created_at DESC`).all(packageId);return{variants,selected,cover,generationJobs};}
 export function selectHtmlVisualVariant(packageId:string,themeKey:string){const v=db.prepare(`SELECT * FROM html_visual_variants WHERE package_id=? AND theme_key=?`).get(packageId,themeKey) as any;if(!v)throw new Error('visual variant not found');db.prepare(`UPDATE html_visual_variants SET status='generated',selected_at=NULL WHERE package_id=? AND id<>?`).run(packageId,v.id);db.prepare(`UPDATE html_visual_variants SET status=CASE WHEN status='final' THEN 'final' ELSE 'selected' END,selected_at=CURRENT_TIMESTAMP,updated_at=CURRENT_TIMESTAMP WHERE id=?`).run(v.id);return getHtmlVisualState(packageId);}
 export function getHtmlVisualVariant(id:string){const v=db.prepare(`SELECT * FROM html_visual_variants WHERE id=?`).get(id) as any;if(!v)return null;v.revisions=db.prepare(`SELECT * FROM html_visual_revisions WHERE variant_id=? ORDER BY revision_no`).all(id);const latest=v.revisions?.length?v.revisions[v.revisions.length-1]:null;v.current_file_path=latest?.file_path||v.base_file_path;v.current_revision_no=latest?.revision_no||0;return v;}
 export function addHtmlVisualRevision(variantId:string,filePath:string,instruction:string){const v=getHtmlVisualVariant(variantId);if(!v)throw new Error('visual variant not found');invalidateVisualMaster(v.package_id);const n=(v.current_revision_no||0)+1;const id=randomUUID();db.prepare(`INSERT INTO html_visual_revisions(id,variant_id,revision_no,file_path,edit_instruction) VALUES (?,?,?,?,?)`).run(id,variantId,n,filePath,instruction);db.prepare(`UPDATE html_visual_variants SET status='selected',selected_at=COALESCE(selected_at,CURRENT_TIMESTAMP),updated_at=CURRENT_TIMESTAMP WHERE id=?`).run(variantId);return getHtmlVisualVariant(variantId);}

@@ -11,7 +11,7 @@ export default function SystemStatus(){
   const xhs=s.tools?.opencliChannels?.xiaohongshu?.status==='ok',dy=s.tools?.opencliChannels?.douyin?.status==='ok';
   return <div style={{marginTop:16}}>
     <div className="card">
-      <h2>系统连接状态</h2><div className="meta"><span className="pill">Agent-Reach {s.tools?.reach?'已安装':'异常'}</span><span className="pill">OpenCLI Bridge {s.tools?.browserBridge?'已连接':'待连接'}</span><span className="pill">OmniSeek {s.tools?.omniseek?.status==='ok'?'在线':'离线'}</span><span className="pill">小红书 {xhs?'可搜索':'不可用'}</span><span className="pill">抖音 {dy?'可搜索':'不可用'}</span><span className="pill">Kimi {s.kimiConfigured?`${s.kimiModel||''} 已配置`:'缺 API Key'}</span><span className="pill">Thinking {s.kimiThinking?'ON':'默认'}</span><span className="pill">Dry Run {s.dryRun?'ON':'OFF'}</span></div>
+      <h2>系统连接状态</h2><div className="meta"><span className="pill">Agent-Reach {s.tools?.reach?'已安装':'异常'}</span><span className="pill">OpenCLI Bridge {s.tools?.browserBridge?'已连接':'待连接'}</span><span className="pill">OmniSeek {s.tools?.omniseek?.status==='ok'?'在线':'离线'}</span><span className="pill">小红书 {xhs?'可搜索':'不可用'}</span><span className="pill">抖音 {dy?'可搜索':'不可用'}</span><span className="pill">Model {s.llmModel||s.kimiModel||'—'}</span><span className="pill">Thinking {s.kimiThinking?'ON':'默认'}</span><span className="pill">Dry Run {s.dryRun?'ON':'OFF'}</span></div>
       <p className="muted">研究库 {s.stats?.research||0} · 候选 {s.stats?.topics||0} · 内容任务 {s.stats?.content||0} · Final {s.stats?.finals||0}</p>
       {s.tools?.reach?.xiaohongshu?.status==='off'&&xhs&&<p className="muted" style={{marginBottom:0}}>Agent Reach doctor 未识别小红书后端，但 OpenCLI Browser Bridge 已连接；系统以 OpenCLI 实际能力为准。</p>}
     </div>

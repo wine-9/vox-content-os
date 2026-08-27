@@ -14,6 +14,7 @@ node_modules/
 *.pfx
 
 # Runtime data
+.sinote-runtime/
 /data/
 /public/generated/
 *.sqlite

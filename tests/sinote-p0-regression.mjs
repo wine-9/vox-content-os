@@ -62,8 +62,8 @@ test('P0-3 发布台任务先持久化，重复提交被阻止且状态可恢复
   assert.equal(direct.getDirectJob(job.id)?.id,job.id);
 });
 
-test('P0-3/D 跨进程重复提交只有一个执行赢得锁，DRY RUN 到本地成功终态',async()=>{
-  const job=direct.createDirectJob({title:'DRY RUN 锁回归',body:'只在本机模拟',files:[{name:'local.png',type:'image/png',size:3}]});
+test('P0-3/D 跨进程重复提交只有一个执行赢得锁，测试模式到本地成功终态',async()=>{
+  const job=direct.createDirectJob({title:'测试模式锁回归',body:'只在本机模拟',platforms:['wechat'],files:[{name:'local.png',type:'image/png',size:3}]});
   direct.markDirectFileReady(job.id,job.files[0].id);
   const childBegin=async()=>{
     const code=`import {beginDirectPublish} from ${JSON.stringify(directUrl)};console.log(JSON.stringify(beginDirectPublish(${JSON.stringify(job.id)})));`;
@@ -83,7 +83,7 @@ test('P0-3/D 跨进程重复提交只有一个执行赢得锁，DRY RUN 到本�
     assert.equal(final.results[platform].status,'succeeded');
     assert.equal(final.results[platform].mode,'dry_run_local');
     assert.equal(final.results[platform].externalWrite,false);
-    assert.match(final.results[platform].message,/DRY RUN.*未发生外部平台写入/);
+    assert.match(final.results[platform].message,/测试模式.*未发生外部平台写入/);
   }
   assert.equal(fs.existsSync(path.join(temp,'data','quick-publish',job.id,'.publish-lock')),false);
 });

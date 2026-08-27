@@ -1,1 +1,2 @@
-import ReleaseClient from'./ReleaseClient';export default function Page(){return <ReleaseClient/>}
+import {redirect} from 'next/navigation';
+export default function LegacyRelease(){redirect('/publish')}

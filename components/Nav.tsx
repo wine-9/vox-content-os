@@ -16,6 +16,7 @@ const advanced = [
 
 function isActive(pathname: string, href: string) {
   if (href === '/') return pathname === '/';
+  if (href === '/publish' && (pathname.startsWith('/history') || pathname.startsWith('/quick-publish') || pathname.startsWith('/release'))) return true;
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
@@ -31,7 +32,7 @@ export function Nav() {
   const pathname = usePathname() || '/';
   return <>
     <header className="topbar">
-      <a className="brand" href="/" aria-label="Sinote 工作台"><span>Sinote</span><small>Content Workspace</small></a>
+      <a className="brand" href="/" aria-label="Sinote 工作台"><span>Sinote</span><small>内容工作台</small></a>
       <nav className="top-nav" aria-label="主导航">
         {primary.map(item => <a key={item.href} className={isActive(pathname, item.href) ? 'is-active' : ''} href={item.href}>{item.label}</a>)}
       </nav>
@@ -48,16 +49,13 @@ export function SideNav() {
   return <aside className="side-nav" aria-label="工作区导航">
     <a className="new-project-link" href="/topics"><span aria-hidden="true">＋</span> 新建内容</a>
     <div className="side-nav-group">
-      <div className="side-nav-label">WORKSPACE</div>
+      <div className="side-nav-label">主要流程</div>
       {primary.map(item => <NavLink key={item.href} {...item} pathname={pathname} />)}
     </div>
     <details className="side-nav-group side-nav-secondary">
       <summary className="side-nav-label">更多 / 高级功能</summary>
       {advanced.map(item => <NavLink key={item.href} {...item} pathname={pathname} compact />)}
     </details>
-    <div className="side-nav-footer">
-      <span className="side-nav-note">Sage &amp; Serif Humanist</span>
-      <span className="side-nav-note">VOX Content OS</span>
-    </div>
+    <div className="side-nav-footer"><span className="side-nav-note">Sinote</span></div>
   </aside>;
 }

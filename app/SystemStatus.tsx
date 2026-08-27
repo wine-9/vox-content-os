@@ -1,5 +1,7 @@
 'use client';
 import {useEffect,useState} from 'react';
+import ModelSwitcher from '../components/ModelSwitcher';
+import ApiBalanceBadge from '../components/ApiBalanceBadge';
 function CopyLink({url,label}:{url?:string|null,label:string}){const[copied,setCopied]=useState(false);if(!url)return null;const copy=async()=>{try{await navigator.clipboard.writeText(url);setCopied(true);setTimeout(()=>setCopied(false),1200)}catch{}};return <div style={{display:'flex',gap:8,alignItems:'center',flexWrap:'wrap',margin:'8px 0'}}><span className="muted" style={{minWidth:88}}>{label}</span><a href={url} target="_blank" rel="noreferrer" style={{wordBreak:'break-all'}}>{url}</a><button className="secondary" onClick={copy} style={{padding:'5px 9px'}}>{copied?'已复制':'复制'}</button></div>}
 export default function SystemStatus(){
   const[s,setS]=useState<any>(null),[balance,setBalance]=useState<any>(null),[access,setAccess]=useState<any>(null);
@@ -12,7 +14,8 @@ export default function SystemStatus(){
   return <details id="advanced-system" className="card" style={{marginTop:16}}>
     <summary><strong>高级诊断信息 / 系统信息</strong><span className="muted" style={{marginLeft:8}}>日常使用无需展开</span></summary>
     <div style={{marginTop:16}}>
-      <div className="card">
+      <div className="card"><h2>高级设置</h2><p className="muted">模型切换、额度与技术诊断仅在需要维护时使用。</p><div style={{display:'flex',gap:10,alignItems:'center',flexWrap:'wrap'}}><ModelSwitcher/><ApiBalanceBadge/></div></div>
+      <div className="card" style={{marginTop:16}}>
         <h2>系统连接状态</h2><div className="meta"><span className="pill">Agent-Reach {s.tools?.reach?'已安装':'异常'}</span><span className="pill">OpenCLI Bridge {s.tools?.browserBridge?'已连接':'待连接'}</span><span className="pill">OmniSeek {s.tools?.omniseek?.status==='ok'?'在线':'离线'}</span><span className="pill">小红书 {xhs?'可搜索':'不可用'}</span><span className="pill">抖音 {dy?'可搜索':'不可用'}</span><span className="pill">Model {s.llmModel||s.kimiModel||'—'}</span><span className="pill">Thinking {s.kimiThinking?'ON':'默认'}</span><span className="pill">{s.dryRun?'测试模式':'真实发布模式'}</span></div>
         <p className="muted">研究库 {s.stats?.research||0} · 候选 {s.stats?.topics||0} · 内容任务 {s.stats?.content||0} · 已定稿 {s.stats?.finals||0}</p>
         {s.tools?.reach?.xiaohongshu?.status==='off'&&xhs&&<p className="muted" style={{marginBottom:0}}>Agent Reach doctor 未识别小红书后端，但 OpenCLI Browser Bridge 已连接；系统以 OpenCLI 实际能力为准。</p>}

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=900, height=383, initial-scale=1.0">
+  <title>26秋季班课程介绍：编曲 · 微信公众号封面</title>
+  <style>
+    :root {
+      --paper: #f3f0e8;
+      --paper-card: #ece6d8;
+      --paper-dark: #191816;
+      --ink: #171715;
+      --muted: #746f65;
+      --rule: #cfc8ba;
+      --accent: #9a6b3b;
+      --accent-warm: #c06830;
+      --accent-gold: #b68a4c;
+      --serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", "STSong", "Hiragino Mincho ProN", serif;
+      --sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "Noto Sans SC", "Hiragino Sans GB", Arial, sans-serif;
+      --mono: "SFMono-Regular", Consolas, "IBM Plex Mono", Menlo, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 900px;
+      height: 383px;
+      margin: 0;
+      overflow: hidden;
+      background-color: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .cover-container {
+      width: 900px;
+      height: 383px;
+      position: relative;
+      padding: 38px 46px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(154, 107, 59, 0.08), transparent 300px),
+        radial-gradient(circle at 85% 85%, rgba(23, 23, 21, 0.05), transparent 350px),
+        repeating-linear-gradient(0deg, rgba(23, 23, 21, 0.015) 0px, rgba(23, 23, 21, 0.015) 1px, transparent 1px, transparent 4px),
+        repeating-linear-gradient(90deg, rgba(23, 23, 21, 0.012) 0px, rgba(23, 23, 21, 0.012) 1px, transparent 1px, transparent 4px);
+    }
+
+    .cover-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--rule);
+      padding-bottom: 12px;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .cover-top-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .cover-logo {
+      width: 26px;
+      height: 26px;
+      object-fit: contain;
+    }
+
+    .cover-top-left strong {
+      color: var(--ink);
+      font-size: 12px;
+      letter-spacing: 0.16em;
+    }
+
+    .cover-main {
+      display: grid;
+      grid-template-columns: 1fr 310px;
+      gap: 28px;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .cover-title-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .cover-tag {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      color: var(--accent-warm);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .cover-h1 {
+      font-family: var(--serif);
+      font-size: 40px;
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+    }
+
+    .cover-sub {
+      font-family: var(--serif);
+      font-size: 16px;
+      color: var(--muted);
+      font-style: italic;
+      margin-top: 2px;
+    }
+
+    /* Right visual DAW element */
+    .cover-visual {
+      background: #1c1b18;
+      border-radius: 4px;
+      padding: 16px 18px;
+      border: 1px solid #33302a;
+      box-shadow: 0 10px 24px -6px rgba(23, 23, 21, 0.25);
+    }
+
+    .cover-visual-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      color: #9e9789;
+      border-bottom: 1px solid #33302a;
+      padding-bottom: 6px;
+      margin-bottom: 10px;
+    }
+
+    .cv-track {
+      display: grid;
+      grid-template-columns: 55px 1fr;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .cv-track:last-child {
+      margin-bottom: 0;
+    }
+
+    .cv-track span {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: #9e9789;
+    }
+
+    .cv-lane {
+      height: 18px;
+      background: #25231e;
+      border-radius: 2px;
+      position: relative;
+    }
+
+    .cv-clip {
+      position: absolute;
+      height: 14px;
+      top: 2px;
+      border-radius: 2px;
+      font-family: var(--mono);
+      font-size: 8px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      padding-left: 4px;
+    }
+
+    .cover-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--rule);
+      padding-top: 10px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+  <div class="cover-container">
+    <div class="cover-top">
+      <div class="cover-top-left">
+        <img src="assets/vox-logo.png" alt="VOX" class="cover-logo">
+        <strong>VOX MUSIC SCHOOL</strong>
+      </div>
+      <div>AUTUMN 2026 SEMESTER</div>
+      <div>WUHAN · GUANGGU</div>
+    </div>
+
+    <div class="cover-main">
+      <div class="cover-title-group">
+        <div class="cover-tag">2026 秋季班 · 专业介绍</div>
+        <h1 class="cover-h1">26秋季班课程介绍：编曲</h1>
+        <p class="cover-sub">从第一颗 MIDI 音符，到第一首属于你的完整作品。</p>
+      </div>
+
+      <div class="cover-visual">
+        <div class="cover-visual-head">
+          <span>VOX DAW ENGINE</span>
+          <span style="color:#e5a958;">120 BPM · MIDI</span>
+        </div>
+        <div class="cv-track">
+          <span style="color:#c06830;">DRUMS</span>
+          <div class="cv-lane">
+            <div class="cv-clip" style="left:4px; width:95px; background:#c06830;">Groove Main</div>
+            <div class="cv-clip" style="left:104px; width:110px; background:#c06830;">Chorus 16th</div>
+          </div>
+        </div>
+        <div class="cv-track">
+          <span style="color:#8a6a4b;">BASS</span>
+          <div class="cv-lane">
+            <div class="cv-clip" style="left:4px; width:95px; background:#8a6a4b;">Root Line</div>
+            <div class="cv-clip" style="left:104px; width:110px; background:#8a6a4b;">Pumping 808</div>
+          </div>
+        </div>
+        <div class="cv-track">
+          <span style="color:#507068;">KEYS</span>
+          <div class="cv-lane">
+            <div class="cv-clip" style="left:4px; width:210px; background:#507068;">Rhodes 7th Layering</div>
+          </div>
+        </div>
+        <div class="cv-track">
+          <span style="color:#b68a4c;">SYNTH</span>
+          <div class="cv-lane">
+            <div class="cv-clip" style="left:80px; width:134px; background:#b68a4c;">Lead Hook Solo</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cover-bottom">
+      <span>09.19 正式开课 · 14 教学周</span>
+      <span>把脑海里的动机，做成耳机里完整的歌</span>
+    </div>
+  </div>
+</body>
+</html>

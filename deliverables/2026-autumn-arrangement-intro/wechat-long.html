@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1080, initial-scale=1.0">
+  <title>2026 秋季班｜编曲专业介绍 · VOX 音乐教室</title>
+  <style>
+    :root {
+      --paper: #f3f0e8;
+      --paper-card: #ece6d8;
+      --paper-card-light: #faf8f3;
+      --ink: #171715;
+      --ink-soft: #2d2b27;
+      --muted: #746f65;
+      --rule: #cfc8ba;
+      --rule-dark: #171715;
+      --accent: #9a6b3b;
+      --accent-warm: #c06830;
+      --accent-gold: #b68a4c;
+      --track-drum: #c06830;
+      --track-bass: #8a6a4b;
+      --track-keys: #507068;
+      --track-synth: #5a6678;
+      --track-lead: #b68a4c;
+      --serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", "STSong", "Hiragino Mincho ProN", serif;
+      --sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "Noto Sans SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      --mono: "SFMono-Regular", Consolas, "IBM Plex Mono", "Liberation Mono", Menlo, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 1080px;
+      margin: 0 auto;
+      background-color: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Editorial Paper Background Texture */
+    .paper-texture {
+      position: relative;
+      background-color: var(--paper);
+      background-image: 
+        radial-gradient(circle at 12% 8%, rgba(154, 107, 59, 0.05), transparent 450px),
+        radial-gradient(circle at 88% 75%, rgba(23, 23, 21, 0.04), transparent 500px),
+        repeating-linear-gradient(0deg, rgba(23, 23, 21, 0.015) 0px, rgba(23, 23, 21, 0.015) 1px, transparent 1px, transparent 4px),
+        repeating-linear-gradient(90deg, rgba(23, 23, 21, 0.012) 0px, rgba(23, 23, 21, 0.012) 1px, transparent 1px, transparent 4px);
+    }
+
+    .container {
+      width: 1080px;
+      padding: 64px 72px 100px;
+      position: relative;
+    }
+
+    /* Top Masthead */
+    .masthead {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 28px;
+      border-bottom: 1.5px solid var(--rule-dark);
+      font-family: var(--mono);
+      font-size: 15px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .masthead-brand {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .masthead-logo {
+      width: 44px;
+      height: 44px;
+      object-fit: contain;
+    }
+    .masthead-text strong {
+      display: block;
+      color: var(--ink);
+      font-size: 16px;
+      letter-spacing: 0.18em;
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: 64px 0 54px;
+      border-bottom: 1px solid var(--rule);
+      position: relative;
+    }
+    .hero-meta {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-family: var(--mono);
+      font-size: 16px;
+      letter-spacing: 0.22em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      padding: 6px 14px;
+      background: var(--paper-card);
+      border-left: 3px solid var(--accent);
+    }
+    .hero-title {
+      font-family: var(--serif);
+      font-size: 68px;
+      line-height: 1.18;
+      font-weight: 600;
+      color: var(--ink);
+      letter-spacing: -0.02em;
+      margin-bottom: 26px;
+    }
+    .hero-subtitle {
+      font-family: var(--serif);
+      font-size: 28px;
+      line-height: 1.5;
+      color: var(--accent-warm);
+      font-style: italic;
+      margin-bottom: 36px;
+    }
+    .hero-lead {
+      font-size: 23px;
+      line-height: 1.85;
+      color: var(--ink-soft);
+      max-width: 900px;
+      background: var(--paper-card-light);
+      padding: 32px 36px;
+      border: 1px solid var(--rule);
+      border-left: 4px solid var(--ink);
+      position: relative;
+    }
+    .hero-lead::after {
+      content: "09.19 START · 14 WEEKS · ARRANGEMENT";
+      position: absolute;
+      right: 24px;
+      bottom: -12px;
+      background: var(--paper);
+      padding: 2px 10px;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+      border: 1px solid var(--rule);
+    }
+
+    /* Section Component */
+    .section {
+      padding: 64px 0;
+      border-bottom: 1px solid var(--rule);
+    }
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+    .section-num {
+      font-family: var(--mono);
+      font-size: 32px;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+    }
+    .section-title-wrap {
+      flex: 1;
+    }
+    .section-label {
+      font-family: var(--mono);
+      font-size: 14px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+    .section-title {
+      font-family: var(--serif);
+      font-size: 40px;
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 1.25;
+    }
+
+    /* Visual Diagrams / DAW Mockups */
+    .figure-frame {
+      background: #1c1b18;
+      border-radius: 6px;
+      padding: 28px;
+      color: #eae5d9;
+      margin: 36px 0;
+      box-shadow: 0 12px 30px -10px rgba(23, 23, 21, 0.25);
+      border: 1px solid #33302a;
+    }
+    .figure-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--mono);
+      font-size: 13px;
+      letter-spacing: 0.14em;
+      color: #9e9789;
+      border-bottom: 1px solid #33302a;
+      padding-bottom: 14px;
+      margin-bottom: 20px;
+    }
+    .figure-header-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .figure-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #4ade80;
+      box-shadow: 0 0 8px #4ade80;
+    }
+
+    /* DAW Multi-track Graphic */
+    .daw-tracks {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .daw-track-row {
+      display: grid;
+      grid-template-columns: 170px 1fr;
+      gap: 14px;
+      align-items: center;
+    }
+    .daw-track-info {
+      font-family: var(--mono);
+      font-size: 13px;
+      background: #272520;
+      padding: 10px 14px;
+      border-radius: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-left: 4px solid #fff;
+    }
+    .daw-lane {
+      height: 42px;
+      background: #25231e;
+      border-radius: 4px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      padding: 0 6px;
+    }
+    .daw-clip {
+      position: absolute;
+      height: 32px;
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 500;
+      color: #fff;
+    }
+
+    /* Grid Layouts */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    /* Editorial Cards */
+    .card {
+      background: var(--paper-card);
+      border: 1px solid var(--rule);
+      padding: 30px 28px;
+      border-radius: 2px;
+      position: relative;
+    }
+    .card-tag {
+      font-family: var(--mono);
+      font-size: 13px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+      display: block;
+    }
+    .card-title {
+      font-family: var(--serif);
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 14px;
+      line-height: 1.35;
+    }
+    .card-desc {
+      font-size: 18px;
+      line-height: 1.7;
+      color: var(--ink-soft);
+    }
+
+    /* Pain point list */
+    .scene-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 18px;
+    }
+    .scene-item {
+      display: grid;
+      grid-template-columns: 36px 1fr;
+      gap: 16px;
+      align-items: baseline;
+      padding: 18px 22px;
+      background: var(--paper-card-light);
+      border: 1px solid var(--rule);
+    }
+    .scene-badge {
+      font-family: var(--mono);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--accent-warm);
+    }
+    .scene-content strong {
+      font-size: 20px;
+      color: var(--ink);
+      display: block;
+      margin-bottom: 6px;
+      font-family: var(--serif);
+    }
+    .scene-content p {
+      font-size: 17px;
+      line-height: 1.65;
+      color: var(--muted);
+    }
+
+    /* Method Steps (听 拆 仿 写) */
+    .method-flow {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 24px;
+    }
+    .method-step {
+      background: var(--paper-card-light);
+      border: 1px solid var(--rule);
+      padding: 26px 20px;
+      border-top: 4px solid var(--accent);
+      position: relative;
+    }
+    .method-char {
+      font-family: var(--serif);
+      font-size: 42px;
+      font-weight: 700;
+      color: var(--ink);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .method-en {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.16em;
+      color: var(--accent-warm);
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .method-desc {
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--ink-soft);
+    }
+
+    /* Module Accordion/Block */
+    .module-item {
+      background: var(--paper-card-light);
+      border: 1px solid var(--rule);
+      padding: 28px 32px;
+      margin-bottom: 20px;
+      display: grid;
+      grid-template-columns: 70px 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+    .module-num {
+      font-family: var(--mono);
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--accent);
+      padding-top: 4px;
+    }
+    .module-body h3 {
+      font-family: var(--serif);
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 10px;
+    }
+    .module-body p {
+      font-size: 18px;
+      line-height: 1.7;
+      color: var(--ink-soft);
+      margin-bottom: 12px;
+    }
+    .module-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .module-tag {
+      font-family: var(--mono);
+      font-size: 13px;
+      padding: 3px 10px;
+      background: var(--paper-card);
+      border: 1px solid var(--rule);
+      color: var(--muted);
+      border-radius: 2px;
+    }
+
+    /* Milestone timeline */
+    .milestone-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 24px;
+    }
+    .milestone-col {
+      background: var(--paper-card);
+      border: 1px solid var(--rule);
+      padding: 24px 20px;
+      border-top: 3px solid var(--ink);
+    }
+    .milestone-phase {
+      font-family: var(--mono);
+      font-size: 13px;
+      letter-spacing: 0.14em;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .milestone-title {
+      font-family: var(--serif);
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 12px;
+    }
+    .milestone-desc {
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+
+    /* Benefits Area (Strict compliant list) */
+    .benefits-banner {
+      background: #252420;
+      color: #f5efe3;
+      padding: 48px 42px;
+      border-radius: 4px;
+      margin-top: 36px;
+    }
+    .benefits-title {
+      font-family: var(--serif);
+      font-size: 30px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #f5efe3;
+    }
+    .benefits-sub {
+      font-family: var(--mono);
+      font-size: 14px;
+      letter-spacing: 0.16em;
+      color: #b68a4c;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+    .benefit-item {
+      background: #1c1b18;
+      border: 1px solid #3d3a33;
+      padding: 20px 18px;
+      border-radius: 2px;
+    }
+    .benefit-label {
+      font-size: 16px;
+      color: #ded8cb;
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+    .benefit-val {
+      font-family: var(--mono);
+      font-size: 22px;
+      font-weight: 700;
+      color: #e5a958;
+    }
+    .benefit-note {
+      font-size: 13px;
+      color: #8c8577;
+      margin-top: 20px;
+      line-height: 1.5;
+    }
+
+    /* Footer & Signature */
+    .footer {
+      padding: 64px 0 20px;
+      text-align: center;
+    }
+    .footer-quote {
+      font-family: var(--serif);
+      font-size: 38px;
+      line-height: 1.45;
+      color: var(--ink);
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+    .footer-brand-wrap {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      margin-top: 32px;
+      padding-top: 32px;
+      border-top: 1px solid var(--rule);
+      width: 100%;
+    }
+    .footer-logo {
+      width: 68px;
+      height: 68px;
+      object-fit: contain;
+    }
+    .footer-stamp {
+      font-family: var(--mono);
+      font-size: 15px;
+      letter-spacing: 0.2em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+    .footer-motto {
+      font-family: var(--serif);
+      font-size: 20px;
+      color: var(--accent-warm);
+      letter-spacing: 0.08em;
+      margin-top: 6px;
+    }
+  </style>
+</head>
+<body class="paper-texture">
+  <div class="container">
+    
+    <!-- Masthead -->
+    <header class="masthead">
+      <div class="masthead-brand">
+        <img src="assets/vox-logo.png" alt="VOX Logo" class="masthead-logo">
+        <div class="masthead-text">
+          <strong>VOX MUSIC SCHOOL</strong>
+          <span>WUHAN · SINCE 2012</span>
+        </div>
+      </div>
+      <div>AUTUMN 2026 · 专业介绍</div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-meta">2026 秋季学期班 · 编曲与音乐制作专业</div>
+      <h1 class="hero-title">
+        把脑海里的动机，<br>
+        做成耳机里完整的歌。
+      </h1>
+      <p class="hero-subtitle">让每一次心动的旋律，不再只停在手机录音里。</p>
+      <div class="hero-lead">
+        在手机备忘录里哼下一段好听的旋律，或者用吉他、键盘扫出一组惬意的和弦，很多人都有过这样的时刻。但当你想把这段旋律变成一首能在耳机里反复单曲循环、有冲击力、有律动、有立体层次的完整作品时，中间缺少的这一环，就是编曲与现代音乐制作。
+      </div>
+    </section>
+
+    <!-- Chapter 01 -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-num">01</div>
+        <div class="section-title-wrap">
+          <div class="section-label">THE SPARK & SCENARIOS</div>
+          <h2 class="section-title">为什么想学编曲？</h2>
+        </div>
+      </div>
+
+      <div class="scene-list">
+        <div class="scene-item">
+          <div class="scene-badge">01</div>
+          <div class="scene-content">
+            <strong>一把乐器弹唱总觉单薄</strong>
+            <p>录进手机的声音干净却孤单，脑海里想要铺设温暖饱满的贝斯、律动鼓点和弦乐/合成器垫底，却不知从何下手。</p>
+          </div>
+        </div>
+        <div class="scene-item">
+          <div class="scene-badge">02</div>
+          <div class="scene-content">
+            <strong>脑海里有画面与节奏，软件里却是一片空白</strong>
+            <p>能清晰感受到心跳般的低音和摇摆的切分，打开宿主面对十几条空白音轨，却不知道第一颗 MIDI 音符该落在哪里。</p>
+          </div>
+        </div>
+        <div class="scene-item">
+          <div class="scene-badge">03</div>
+          <div class="scene-content">
+            <strong>存了一堆 8 小节 Loop，无法连成完整歌曲</strong>
+            <p>搓出来的合成器片段很好听，但不知如何展开前奏、主歌、预副歌、副歌与尾奏，难以形成具有戏剧张力的完整曲式。</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Visual 1: DAW Timeline Visualizer -->
+      <div class="figure-frame">
+        <div class="figure-header">
+          <span>VOX DAW WORKSPACE · VIRTUAL BAND ARRANGEMENT</span>
+          <div class="figure-header-status">
+            <span class="figure-dot"></span>
+            <span>120.00 BPM · 4/4 TIME</span>
+          </div>
+        </div>
+        <div class="daw-tracks">
+          <div class="daw-track-row">
+            <div class="daw-track-info" style="border-left-color: var(--track-drum);">
+              <span>01 DRUMS</span><span>MIDI</span>
+            </div>
+            <div class="daw-lane">
+              <div class="daw-clip" style="left: 20px; width: 220px; background: #c06830;">Kick & Snare Main</div>
+              <div class="daw-clip" style="left: 250px; width: 140px; background: #a85824;">Hi-hat Fill</div>
+              <div class="daw-clip" style="left: 400px; width: 280px; background: #c06830;">Chorus Groove + Ride</div>
+            </div>
+          </div>
+          <div class="daw-track-row">
+            <div class="daw-track-info" style="border-left-color: var(--track-bass);">
+              <span>02 BASS</span><span>AUDIO</span>
+            </div>
+            <div class="daw-lane">
+              <div class="daw-clip" style="left: 20px; width: 220px; background: #8a6a4b;">Root Line Low</div>
+              <div class="daw-clip" style="left: 250px; width: 140px; background: #735539;">Slide Up</div>
+              <div class="daw-clip" style="left: 400px; width: 280px; background: #8a6a4b;">Octave Pumping Bass</div>
+            </div>
+          </div>
+          <div class="daw-track-row">
+            <div class="daw-track-info" style="border-left-color: var(--track-keys);">
+              <span>03 KEYS</span><span>MIDI</span>
+            </div>
+            <div class="daw-lane">
+              <div class="daw-clip" style="left: 20px; width: 220px; background: #507068;">Rhodes 7th Chords</div>
+              <div class="daw-clip" style="left: 250px; width: 140px; background: #3d5952;">Arp Pattern</div>
+              <div class="daw-clip" style="left: 400px; width: 280px; background: #507068;">Layered Voicings</div>
+            </div>
+          </div>
+          <div class="daw-track-row">
+            <div class="daw-track-info" style="border-left-color: var(--track-synth);">
+              <span>04 SYNTH PAD</span><span>MIDI</span>
+            </div>
+            <div class="daw-lane">
+              <div class="daw-clip" style="left: 140px; width: 250px; background: #5a6678;">Warm Analog Pad</div>
+              <div class="daw-clip" style="left: 400px; width: 280px; background: #475466;">Stereo Wide Wash</div>
+            </div>
+          </div>
+          <div class="daw-track-row">
+            <div class="daw-track-info" style="border-left-color: var(--track-lead);">
+              <span>05 LEAD LINE</span><span>MIDI</span>
+            </div>
+            <div class="daw-lane">
+              <div class="daw-clip" style="left: 250px; width: 140px; background: #b68a4c;">Counter-Melody</div>
+              <div class="daw-clip" style="left: 400px; width: 280px; background: #b68a4c;">Hook Synth Solo</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Chapter 02 -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-num">02</div>
+        <div class="section-title-wrap">
+          <div class="section-label">THE 4 ACOUSTIC DIMENSIONS</div>
+          <h2 class="section-title">编曲究竟在学什么？</h2>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <span class="card-tag">DIMENSION 01 · 配器织体</span>
+          <h3 class="card-title">织体与声部编配 (Instrumentation)</h3>
+          <p class="card-desc">决定谁来发声、何时发声。合理分配高、中、低频乐器与和弦开闭音位，让吉他、键盘、管弦与人声各司其职，层次分明不拥挤。</p>
+        </div>
+        <div class="card">
+          <span class="card-tag">DIMENSION 02 · 节奏下盘</span>
+          <h3 class="card-title">律动与重音架构 (Groove & Rhythm)</h3>
+          <p class="card-desc">底鼓与贝斯的精准咬合，踩镲的细微摇摆（Swing）与幽灵音加花（Ghost Notes），为音乐注入跳动的心跳与身体摆动的骨骼。</p>
+        </div>
+        <div class="card">
+          <span class="card-tag">DIMENSION 03 · 和声色彩</span>
+          <h3 class="card-title">和声重配与情绪 (Harmony & Color)</h3>
+          <p class="card-desc">用不同的和弦重配（Re-harmonization）赋予相同旋律截然不同的情绪走向。掌握七和弦、九和弦、转位与离调和弦的色彩张力。</p>
+        </div>
+        <div class="card">
+          <span class="card-tag">DIMENSION 04 · 声学空间</span>
+          <h3 class="card-title">空间感与动态呼吸 (Space & Dynamics)</h3>
+          <p class="card-desc">运用音量平衡、立体声声相（Pan）、混响深度（Reverb）与频段雕琢（EQ），打造如同置身 livehouse 或电影现场的沉浸空间。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Chapter 03 -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-num">03</div>
+        <div class="section-title-wrap">
+          <div class="section-label">ZERO-TO-ONE LEARNING PATH</div>
+          <h2 class="section-title">零基础如何起步？</h2>
+        </div>
+      </div>
+
+      <div class="scene-list">
+        <div class="scene-item">
+          <div class="scene-badge">A</div>
+          <div class="scene-content">
+            <strong>无需死记死背百科乐理，从耳朵直觉出发</strong>
+            <p>现代音乐制作依托 DAW 的可视化界面，钢琴卷帘（Piano Roll）让音高与时长直观呈现，网格吸附让节奏切分一目了然。</p>
+          </div>
+        </div>
+        <div class="scene-item">
+          <div class="scene-badge">B</div>
+          <div class="scene-content">
+            <strong>先做再学，工程直驱</strong>
+            <p>每讲到一个声部概念，马上在真实工程里拖动音符、调整力度参数亲耳试听。在亲手做出声音的过程中自然领悟原理。</p>
+          </div>
+        </div>
+        <div class="scene-item">
+          <div class="scene-badge">C</div>
+          <div class="scene-content">
+            <strong>模块化搭积木，层层推进</strong>
+            <p>从 2 轨鼓贝斯基础骨架 → 4 轨和声铺底 → 8 轨对位装饰 → 16 轨完整动态编配，渐进式建立全局编曲思维。</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Visual 2: Piano Roll Step Sequencer Graphic -->
+      <div class="figure-frame" style="background: #191816;">
+        <div class="figure-header">
+          <span>MIDI PIANO ROLL & STEP SEQUENCER · INTUITIVE EDITING</span>
+          <div class="figure-header-status">
+            <span class="figure-dot" style="background:#e5a958; box-shadow:0 0 8px #e5a958;"></span>
+            <span>GRID: 1/16 · QUANTIZE 100%</span>
+          </div>
+        </div>
+        <svg width="100%" height="150" viewBox="0 0 880 150" style="display:block;">
+          <!-- Grid lines -->
+          <defs>
+            <pattern id="grid" width="55" height="25" patternUnits="userSpaceOnUse">
+              <rect width="55" height="25" fill="#201e1a" stroke="#2c2923" stroke-width="1"/>
+            </pattern>
+          </defs>
+          <rect width="880" height="150" fill="url(#grid)"/>
+          
+          <!-- Piano Keys on left -->
+          <rect x="0" y="0" width="60" height="150" fill="#151412"/>
+          <text x="12" y="20" fill="#8c8577" font-family="monospace" font-size="11">C4 (High)</text>
+          <text x="12" y="50" fill="#8c8577" font-family="monospace" font-size="11">A3 (Keys)</text>
+          <text x="12" y="80" fill="#8c8577" font-family="monospace" font-size="11">F3 (Harm)</text>
+          <text x="12" y="110" fill="#8c8577" font-family="monospace" font-size="11">D3 (Bass)</text>
+          <text x="12" y="140" fill="#8c8577" font-family="monospace" font-size="11">C3 (Root)</text>
+          
+          <!-- MIDI Notes -->
+          <!-- Kick/Root Notes -->
+          <rect x="70" y="127" width="45" height="20" rx="3" fill="#c06830"/>
+          <rect x="180" y="127" width="45" height="20" rx="3" fill="#c06830"/>
+          <rect x="290" y="127" width="45" height="20" rx="3" fill="#c06830"/>
+          <rect x="400" y="127" width="45" height="20" rx="3" fill="#c06830"/>
+          <rect x="510" y="127" width="45" height="20" rx="3" fill="#c06830"/>
+          <rect x="620" y="127" width="45" height="20" rx="3" fill="#c06830"/>
+          <rect x="730" y="127" width="45" height="20" rx="3" fill="#c06830"/>
+          
+          <!-- Snare/Backbeat -->
+          <rect x="180" y="97" width="50" height="20" rx="3" fill="#e5a958"/>
+          <rect x="400" y="97" width="50" height="20" rx="3" fill="#e5a958"/>
+          <rect x="620" y="97" width="50" height="20" rx="3" fill="#e5a958"/>
+          
+          <!-- Harmony/Chords -->
+          <rect x="70" y="67" width="100" height="20" rx="3" fill="#507068" opacity="0.9"/>
+          <rect x="70" y="37" width="100" height="20" rx="3" fill="#507068" opacity="0.9"/>
+          <rect x="290" y="67" width="100" height="20" rx="3" fill="#507068" opacity="0.9"/>
+          <rect x="290" y="37" width="100" height="20" rx="3" fill="#507068" opacity="0.9"/>
+          <rect x="510" y="67" width="100" height="20" rx="3" fill="#507068" opacity="0.9"/>
+          <rect x="510" y="37" width="100" height="20" rx="3" fill="#507068" opacity="0.9"/>
+          
+          <!-- Lead Melody Top -->
+          <rect x="180" y="7" width="40" height="20" rx="3" fill="#b68a4c"/>
+          <rect x="235" y="7" width="50" height="20" rx="3" fill="#b68a4c"/>
+          <rect x="400" y="7" width="40" height="20" rx="3" fill="#b68a4c"/>
+          <rect x="455" y="7" width="50" height="20" rx="3" fill="#b68a4c"/>
+          <rect x="620" y="7" width="95" height="20" rx="3" fill="#b68a4c"/>
+        </svg>
+      </div>
+    </section>
+
+    <!-- Chapter 04 -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-num">04</div>
+        <div class="section-title-wrap">
+          <div class="section-label">SYSTEMATIC 6 MODULES</div>
+          <h2 class="section-title">六大核心专业教学模块</h2>
+        </div>
+      </div>
+
+      <div class="module-item">
+        <div class="module-num">M1</div>
+        <div class="module-body">
+          <h3>DAW 宿主工作流与 MIDI 语言</h3>
+          <p>掌握主流宿主（Ableton Live / Logic Pro / Cubase / Studio One 等）核心架构；熟练运用钢琴卷帘、力度调节、量化吸附与自动化包络（Automation），建立清晰的工程模板。</p>
+          <div class="module-tags">
+            <span class="module-tag">Piano Roll</span>
+            <span class="module-tag">Velocity</span>
+            <span class="module-tag">Quantize</span>
+            <span class="module-tag">Automation</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="module-item">
+        <div class="module-num">M2</div>
+        <div class="module-body">
+          <h3>鼓组与律动构建 (Drums & Groove)</h3>
+          <p>深入底鼓（Kick）与军鼓（Snare）的重拍重力；闭镲（Hi-hat）与打击乐的微弱切分、摇摆感（Swing）与幽灵音加花；拆解流行、摇滚、Indie Pop、R&B 与电子音乐的经典鼓点。</p>
+          <div class="module-tags">
+            <span class="module-tag">Kick & Snare</span>
+            <span class="module-tag">Hi-hat Swing</span>
+            <span class="module-tag">Ghost Notes</span>
+            <span class="module-tag">Groove Pool</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="module-item">
+        <div class="module-num">M3</div>
+        <div class="module-body">
+          <h3>低音线条与声学地基 (Bass & Low-End)</h3>
+          <p>根音行进与和声引导；贝斯与底鼓在节奏上的咬合互锁；侧链压缩（Sidechain）避让低频冲突；电贝斯真实演奏感模拟与合成器低音（Synth Bass / 808）音色调配。</p>
+          <div class="module-tags">
+            <span class="module-tag">Root Movement</span>
+            <span class="module-tag">Kick-Bass Lock</span>
+            <span class="module-tag">Sidechain</span>
+            <span class="module-tag">808 & Synth Bass</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="module-item">
+        <div class="module-num">M4</div>
+        <div class="module-body">
+          <h3>和声乐器与氛围声场 (Keys, Guitars & Synths)</h3>
+          <p>键盘密集与开离排列（Voicing），避开中频淤积；木吉他扫弦律动与电吉他分解琶音；合成器 Pad 氛围铺底、Pluck 灵动跳跃与 Lead 穿透主线的声相编排。</p>
+          <div class="module-tags">
+            <span class="module-tag">Chord Voicing</span>
+            <span class="module-tag">Guitar Strum & Arp</span>
+            <span class="module-tag">Pad & Pluck</span>
+            <span class="module-tag">Stereo Pan</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="module-item">
+        <div class="module-num">M5</div>
+        <div class="module-body">
+          <h3>曲式结构与动态配器 (Arrangement & Dynamics)</h3>
+          <p>经典曲式架构（Intro → Verse → Pre-Chorus → Chorus → Bridge → Outro）；利用乐器声部增减、高低通滤波过滤与静音停顿（Drop）制造爆发力；对位副旋律与过门加花（Fill-in）。</p>
+          <div class="module-tags">
+            <span class="module-tag">Song Structure</span>
+            <span class="module-tag">Dynamic Tension</span>
+            <span class="module-tag">Fill-in</span>
+            <span class="module-tag">Energy Arc</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="module-item">
+        <div class="module-num">M6</div>
+        <div class="module-body">
+          <h3>音色塑造与基础制作混音 (Sound & Production)</h3>
+          <p>减法 EQ 切除多余低频浑浊，保留各声部频段空隙；空间混响（Reverb）与延迟（Delay）构建前后立体景深；分轨音量平衡、总线动态控制与高质量母带成片导出。</p>
+          <div class="module-tags">
+            <span class="module-tag">Parametric EQ</span>
+            <span class="module-tag">Reverb & Delay</span>
+            <span class="module-tag">Balance & Gain</span>
+            <span class="module-tag">Master Export</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Chapter 05 -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-num">05</div>
+        <div class="section-title-wrap">
+          <div class="section-label">VOX METHODOLOGY</div>
+          <h2 class="section-title">四步闭环实践方法论</h2>
+        </div>
+      </div>
+
+      <div class="method-flow">
+        <div class="method-step">
+          <div class="method-char">听</div>
+          <div class="method-en">01 / LISTEN</div>
+          <p class="method-desc">戴上监听耳机，建立多音轨听觉雷达，分清每个频段的乐器在做什么。</p>
+        </div>
+        <div class="method-step">
+          <div class="method-char">拆</div>
+          <div class="method-en">02 / DECONSTRUCT</div>
+          <p class="method-desc">将经典优秀作品工程拉入宿主，逆向分轨复刻，看大师如何配置声部。</p>
+        </div>
+        <div class="method-step">
+          <div class="method-char">仿</div>
+          <div class="method-en">03 / IMITATE</div>
+          <p class="method-desc">套用经典作品的曲式框架与律动模板，填入自己的和声与旋律进行重编。</p>
+        </div>
+        <div class="method-step">
+          <div class="method-char">写</div>
+          <div class="method-en">04 / CREATE</div>
+          <p class="method-desc">脱离参考曲，独立从零构建工程，完成属于你自己的第一首完整原创作品。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Chapter 06 -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-num">06</div>
+        <div class="section-title-wrap">
+          <div class="section-label">TEACHING PHILOSOPHY</div>
+          <h2 class="section-title">VOX 教学观与课堂特色</h2>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card" style="background: var(--paper-card-light);">
+          <span class="card-tag">PHILOSOPHY 01</span>
+          <h3 class="card-title">少讲百科，多做对比试听与现场改写</h3>
+          <p class="card-desc">拒绝枯燥的名词灌输。老师在课堂上直接打开工程，现场演示“改前 vs 改后”的听感差异，实时调整和弦排列、鼓组加花与混响参数，让你亲耳听见音乐质感如何瞬间蜕变。</p>
+        </div>
+        <div class="card" style="background: var(--paper-card-light);">
+          <span class="card-tag">PHILOSOPHY 02</span>
+          <h3 class="card-title">先做再学，真实工程驱动</h3>
+          <p class="card-desc">每节课直接置身真实工程环境，带着具体编曲问题去找解法。课后作业直接提交真实工程分轨文件，获得细致到每个音符力度、量化精度和频段均衡的专业反馈。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Chapter 07 -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-num">07</div>
+        <div class="section-title-wrap">
+          <div class="section-label">TARGET AUDIENCE</div>
+          <h2 class="section-title">这门课程适合谁？</h2>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <span class="card-tag">FOR GUITAR / KEYBOARD PLAYERS</span>
+          <h3 class="card-title">吉他 / 键盘 / 弹唱爱好者</h3>
+          <p class="card-desc">想摆脱单一乐器伴奏，为自己的弹唱搭建饱满的管弦乐、鼓组与合成器编配，让作品拥有完整乐队的声音厚度。</p>
+        </div>
+        <div class="card">
+          <span class="card-tag">FOR SINGER-SONGWRITERS</span>
+          <h3 class="card-title">词曲创作者 / 独立音乐人</h3>
+          <p class="card-desc">脑海中常有动人的旋律动机，渴望掌握现代编曲制作全流程，亲手将哼唱打磨成具有正式发布品质的成熟单曲。</p>
+        </div>
+        <div class="card">
+          <span class="card-tag">FOR BEDROOM PRODUCERS</span>
+          <h3 class="card-title">卧室制作人 / Beatmaker</h3>
+          <p class="card-desc">做过不少 8 小节 Loop 片段，渴望突破瓶颈，掌握完整曲式结构演进、声部动态推进与多乐器实战编配技巧。</p>
+        </div>
+        <div class="card">
+          <span class="card-tag">FOR MUSIC ENTHUSIASTS</span>
+          <h3 class="card-title">深度音乐爱好者</h3>
+          <p class="card-desc">希望系统理解现代音乐背后的工业制作逻辑，大幅提升听觉审美与鉴赏深度，用制作人视角重新聆听全世界的音乐。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Chapter 08 -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-num">08</div>
+        <div class="section-title-wrap">
+          <div class="section-label">14-WEEK MILESTONES</div>
+          <h2 class="section-title">从第一颗 MIDI 音符到第一首作品</h2>
+        </div>
+      </div>
+
+      <div class="milestone-grid">
+        <div class="milestone-col">
+          <div class="milestone-phase">WEEKS 01 - 04</div>
+          <h4 class="milestone-title">地基搭建</h4>
+          <p class="milestone-desc">DAW 宿主工作流熟悉、MIDI 编辑手感建立、基础鼓组律动与低音线条搭建。</p>
+        </div>
+        <div class="milestone-col">
+          <div class="milestone-phase">WEEKS 05 - 08</div>
+          <h4 class="milestone-title">织体丰富</h4>
+          <p class="milestone-desc">键盘/吉他和声编配、合成器声音设计、多声部对位与 Pad 氛围铺设。</p>
+        </div>
+        <div class="milestone-col">
+          <div class="milestone-phase">WEEKS 09 - 11</div>
+          <h4 class="milestone-title">曲式与动态</h4>
+          <p class="milestone-desc">经典作品逆向拆解、完整段落结构设计、加花过渡与情感张力推进。</p>
+        </div>
+        <div class="milestone-col">
+          <div class="milestone-phase">WEEKS 12 - 14</div>
+          <h4 class="milestone-title">作品交付</h4>
+          <p class="milestone-desc">独立完成一首完整原创/改编编曲工程、基础混音润色与结课交付。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Chapter 09 & Benefits -->
+    <section class="section">
+      <div class="section-header">
+        <div class="section-num">09</div>
+        <div class="section-title-wrap">
+          <div class="section-label">ENROLLMENT & BENEFITS</div>
+          <h2 class="section-title">2026 秋季学期信息</h2>
+        </div>
+      </div>
+
+      <div class="grid-3" style="margin-bottom: 24px;">
+        <div class="card" style="text-align:center;">
+          <span class="card-tag">START DATE</span>
+          <h3 class="card-title" style="font-size:26px; margin-bottom:6px;">2026.09.19</h3>
+          <p class="card-desc" style="font-size:15px;">秋季班正式开课</p>
+        </div>
+        <div class="card" style="text-align:center;">
+          <span class="card-tag">DURATION</span>
+          <h3 class="card-title" style="font-size:26px; margin-bottom:6px;">14 教学周</h3>
+          <p class="card-desc" style="font-size:15px;">完整有效教学周期</p>
+        </div>
+        <div class="card" style="text-align:center;">
+          <span class="card-tag">PROGRAM</span>
+          <h3 class="card-title" style="font-size:26px; margin-bottom:6px;">编曲 / 音乐制作</h3>
+          <p class="card-desc" style="font-size:15px;">包含宿主实操与混音</p>
+        </div>
+      </div>
+
+      <!-- Compliant Benefit List -->
+      <div class="benefits-banner">
+        <h3 class="benefits-title">学期优惠政策</h3>
+        <p class="benefits-sub">SEMESTER ENROLLMENT BENEFITS</p>
+        <div class="benefits-grid">
+          <div class="benefit-item">
+            <div class="benefit-label">老生续报</div>
+            <div class="benefit-val">立减 200 元</div>
+          </div>
+          <div class="benefit-item">
+            <div class="benefit-label">好友推荐</div>
+            <div class="benefit-val">立减 200 元</div>
+          </div>
+          <div class="benefit-item">
+            <div class="benefit-label">新朋友专享</div>
+            <div class="benefit-val">立减 200 元</div>
+          </div>
+          <div class="benefit-item">
+            <div class="benefit-label">双人同行</div>
+            <div class="benefit-val">立减 200 元</div>
+          </div>
+          <div class="benefit-item">
+            <div class="benefit-label">高校新生</div>
+            <div class="benefit-val">立减 200 元</div>
+          </div>
+          <div class="benefit-item">
+            <div class="benefit-label">连续续习奖励</div>
+            <div class="benefit-val">最高立减 2280 元</div>
+          </div>
+        </div>
+        <p class="benefit-note">* 优惠不重复叠加，具体资格以教务核验为准。详细开课与排课细则请咨询课程顾问。</p>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-quote">
+        从第一颗 MIDI 音符，<br>
+        到第一首属于你的完整作品。
+      </div>
+      <div class="footer-brand-wrap">
+        <img src="assets/vox-logo.png" alt="VOX Logo" class="footer-logo">
+        <div class="footer-stamp">VOX MUSIC SCHOOL · WUHAN · SINCE 2012</div>
+        <div class="footer-motto">这个秋天，从喜欢音乐，到开始玩音乐。</div>
+      </div>
+    </footer>
+
+  </div>
+</body>
+</html>

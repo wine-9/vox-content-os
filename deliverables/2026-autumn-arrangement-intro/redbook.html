@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1080, initial-scale=1.0">
+  <title>2026 秋季班｜编曲专业介绍 · 小红书卡片组</title>
+  <style>
+    :root {
+      --paper: #f3f0e8;
+      --paper-card: #ece6d8;
+      --paper-card-light: #faf8f3;
+      --ink: #171715;
+      --ink-soft: #2d2b27;
+      --muted: #746f65;
+      --rule: #cfc8ba;
+      --rule-dark: #171715;
+      --accent: #9a6b3b;
+      --accent-warm: #c06830;
+      --accent-gold: #b68a4c;
+      --track-drum: #c06830;
+      --track-bass: #8a6a4b;
+      --track-keys: #507068;
+      --track-synth: #5a6678;
+      --track-lead: #b68a4c;
+      --serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", "STSong", "Hiragino Mincho ProN", serif;
+      --sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "Noto Sans SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      --mono: "SFMono-Regular", Consolas, "IBM Plex Mono", "Liberation Mono", Menlo, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #1a1a1a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 40px;
+      padding: 40px 0;
+      font-family: var(--sans);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Strict 1080x1440 Xiaohongshu Page Card */
+    .xhs-card {
+      width: 1080px;
+      height: 1440px;
+      background-color: var(--paper);
+      color: var(--ink);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 72px 80px 68px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+      background-image: 
+        radial-gradient(circle at 12% 8%, rgba(154, 107, 59, 0.05), transparent 450px),
+        radial-gradient(circle at 88% 75%, rgba(23, 23, 21, 0.04), transparent 500px),
+        repeating-linear-gradient(0deg, rgba(23, 23, 21, 0.015) 0px, rgba(23, 23, 21, 0.015) 1px, transparent 1px, transparent 4px),
+        repeating-linear-gradient(90deg, rgba(23, 23, 21, 0.012) 0px, rgba(23, 23, 21, 0.012) 1px, transparent 1px, transparent 4px);
+    }
+
+    /* Common Card Header */
+    .card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 22px;
+      border-bottom: 1.5px solid var(--rule-dark);
+      font-family: var(--mono);
+      font-size: 15px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .card-head-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .card-head-logo {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+    }
+    .card-head-left strong {
+      color: var(--ink);
+      font-size: 15px;
+      letter-spacing: 0.18em;
+    }
+    .card-head-page {
+      font-family: var(--mono);
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    /* Common Card Footer */
+    .card-foot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 18px;
+      border-top: 1px solid var(--rule);
+      font-family: var(--mono);
+      font-size: 13px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* Main Content Area in Card */
+    .card-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 28px 0 16px;
+    }
+
+    /* Page 1: Cover Styles */
+    .cover-meta {
+      font-family: var(--mono);
+      font-size: 16px;
+      letter-spacing: 0.2em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      display: inline-block;
+    }
+    .cover-title {
+      font-family: var(--serif);
+      font-size: 72px;
+      line-height: 1.18;
+      font-weight: 600;
+      color: var(--ink);
+      letter-spacing: -0.02em;
+      margin-bottom: 24px;
+    }
+    .cover-subtitle {
+      font-family: var(--serif);
+      font-size: 30px;
+      line-height: 1.45;
+      color: var(--accent-warm);
+      font-style: italic;
+      margin-bottom: 36px;
+    }
+    .cover-lead {
+      font-size: 21px;
+      line-height: 1.8;
+      color: var(--ink-soft);
+      background: var(--paper-card-light);
+      padding: 26px 30px;
+      border: 1px solid var(--rule);
+      border-left: 4px solid var(--ink);
+      margin-bottom: 30px;
+    }
+
+    /* Page 2-7 Common Titles */
+    .sec-tag {
+      font-family: var(--mono);
+      font-size: 14px;
+      letter-spacing: 0.2em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .sec-h2 {
+      font-family: var(--serif);
+      font-size: 40px;
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 1.25;
+      margin-bottom: 24px;
+    }
+
+    /* Items and Lists */
+    .item-box {
+      background: var(--paper-card-light);
+      border: 1px solid var(--rule);
+      padding: 20px 22px;
+      margin-bottom: 14px;
+      display: grid;
+      grid-template-columns: 36px 1fr;
+      gap: 16px;
+      align-items: baseline;
+    }
+    .item-num {
+      font-family: var(--mono);
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--accent-warm);
+    }
+    .item-text strong {
+      font-size: 19px;
+      color: var(--ink);
+      display: block;
+      margin-bottom: 5px;
+      font-family: var(--serif);
+    }
+    .item-text p {
+      font-size: 15.5px;
+      line-height: 1.62;
+      color: var(--ink-soft);
+    }
+
+    /* Grid 2 in Card */
+    .c-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-bottom: 14px;
+    }
+    .c-card {
+      background: var(--paper-card);
+      border: 1px solid var(--rule);
+      padding: 20px 18px;
+      border-radius: 2px;
+    }
+    .c-card-tag {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.16em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      display: block;
+    }
+    .c-card-h3 {
+      font-family: var(--serif);
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+    .c-card-p {
+      font-size: 14.5px;
+      line-height: 1.6;
+      color: var(--ink-soft);
+    }
+
+    /* Figure Box */
+    .dark-box {
+      background: #1c1b18;
+      border-radius: 4px;
+      padding: 20px 22px;
+      color: #eae5d9;
+      margin: 14px 0;
+      border: 1px solid #33302a;
+    }
+    .dark-box-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      color: #9e9789;
+      border-bottom: 1px solid #33302a;
+      padding-bottom: 8px;
+      margin-bottom: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==================== CARD 01 : COVER ==================== -->
+  <section class="xhs-card" id="card-01">
+    <header class="card-head">
+      <div class="card-head-left">
+        <img src="assets/vox-logo.png" alt="VOX" class="card-head-logo">
+        <strong>VOX MUSIC SCHOOL</strong>
+      </div>
+      <div>AUTUMN 2026</div>
+      <div class="card-head-page">01 / 07</div>
+    </header>
+
+    <div class="card-body" style="justify-content: center;">
+      <div class="cover-meta">2026 秋季学期班 · 编曲与音乐制作专业</div>
+      <h1 class="cover-title">
+        把脑海里的动机，<br>
+        做成耳机里完整的歌。
+      </h1>
+      <p class="cover-subtitle">让每一次心动的旋律，不再只停在手机录音里。</p>
+      
+      <div class="cover-lead">
+        在手机备忘录里哼下一段好听的旋律，或者用吉他扫出一组惬意的和弦。当你想把它变成一首有鼓点、有贝斯、有立体层次的完整作品，编曲就是那座连接灵感与成品的桥梁。
+      </div>
+
+      <!-- Mini DAW Visual -->
+      <div class="dark-box" style="margin-top: 8px;">
+        <div class="dark-box-head">
+          <span>VOX PRODUCTION · VIRTUAL BAND</span>
+          <span style="color:#e5a958;">120 BPM · 14 WEEKS</span>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <div style="display:grid; grid-template-columns:110px 1fr; gap:10px; align-items:center;">
+            <span style="font-family:var(--mono); font-size:12px; color:#c06830;">01 DRUMS</span>
+            <div style="height:26px; background:#25231e; border-radius:3px; position:relative;">
+              <div style="position:absolute; left:10px; width:180px; height:20px; top:3px; background:#c06830; border-radius:2px; font-size:10px; font-family:monospace; padding-left:6px; line-height:20px;">Kick & Snare Main</div>
+              <div style="position:absolute; left:210px; width:220px; height:20px; top:3px; background:#c06830; border-radius:2px; font-size:10px; font-family:monospace; padding-left:6px; line-height:20px;">Chorus Groove</div>
+            </div>
+          </div>
+          <div style="display:grid; grid-template-columns:110px 1fr; gap:10px; align-items:center;">
+            <span style="font-family:var(--mono); font-size:12px; color:#8a6a4b;">02 BASS</span>
+            <div style="height:26px; background:#25231e; border-radius:3px; position:relative;">
+              <div style="position:absolute; left:10px; width:180px; height:20px; top:3px; background:#8a6a4b; border-radius:2px; font-size:10px; font-family:monospace; padding-left:6px; line-height:20px;">Root Line</div>
+              <div style="position:absolute; left:210px; width:220px; height:20px; top:3px; background:#8a6a4b; border-radius:2px; font-size:10px; font-family:monospace; padding-left:6px; line-height:20px;">Pumping Bass</div>
+            </div>
+          </div>
+          <div style="display:grid; grid-template-columns:110px 1fr; gap:10px; align-items:center;">
+            <span style="font-family:var(--mono); font-size:12px; color:#507068;">03 KEYS</span>
+            <div style="height:26px; background:#25231e; border-radius:3px; position:relative;">
+              <div style="position:absolute; left:10px; width:420px; height:20px; top:3px; background:#507068; border-radius:2px; font-size:10px; font-family:monospace; padding-left:6px; line-height:20px;">Rhodes 7th & 9th Layered Voicings</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="card-foot">
+      <span>VOX 音乐教室 · 武汉光谷</span>
+      <span>2026.09.19 开课 · 14 教学周</span>
+    </footer>
+  </section>
+
+
+  <!-- ==================== CARD 02 : SCENARIOS & WHY ==================== -->
+  <section class="xhs-card" id="card-02">
+    <header class="card-head">
+      <div class="card-head-left">
+        <img src="assets/vox-logo.png" alt="VOX" class="card-head-logo">
+        <strong>VOX MUSIC SCHOOL</strong>
+      </div>
+      <div>01 / THE SPARK</div>
+      <div class="card-head-page">02 / 07</div>
+    </header>
+
+    <div class="card-body">
+      <div class="sec-tag">SCENARIOS & REAL PAIN POINTS</div>
+      <h2 class="sec-h2">为什么想学编曲？</h2>
+
+      <div class="item-box">
+        <div class="item-num">01</div>
+        <div class="item-text">
+          <strong>一把乐器弹唱总觉单薄</strong>
+          <p>录进手机的声音干净却孤单，脑海里想要铺设温暖饱满的贝斯、律动鼓点和弦乐/合成器垫底，却不知如何编配。</p>
+        </div>
+      </div>
+
+      <div class="item-box">
+        <div class="item-num">02</div>
+        <div class="item-text">
+          <strong>脑海里有画面与节奏，软件里却是一片空白</strong>
+          <p>能清晰感受到心跳般的低音和摇摆的切分，打开宿主面对十几条空白音轨，却不知道第一颗 MIDI 音符该落在哪里。</p>
+        </div>
+      </div>
+
+      <div class="item-box">
+        <div class="item-num">03</div>
+        <div class="item-text">
+          <strong>存了一堆 8 小节 Loop，无法连成完整歌曲</strong>
+          <p>搓出来的合成器片段很好听，但不知如何展开前奏、主歌、副歌与尾奏，难以形成具有戏剧张力的完整曲式。</p>
+        </div>
+      </div>
+
+      <div style="background:var(--paper-card); border-left:4px solid var(--accent); padding:20px 24px; margin-top:10px;">
+        <strong style="font-family:var(--serif); font-size:18px; color:var(--ink); display:block; margin-bottom:5px;">编曲的本质</strong>
+        <p style="font-size:15px; line-height:1.62; color:var(--ink-soft);">
+          编曲是为音乐动机搭建声学空间与情感骨架，决定每一件乐器何时进入、扮演什么角色、在声场中如何呼吸。
+        </p>
+      </div>
+    </div>
+
+    <footer class="card-foot">
+      <span>VOX 音乐教室 · 编曲专业</span>
+      <span>从动机到完整声学空间</span>
+    </footer>
+  </section>
+
+
+  <!-- ==================== CARD 03 : WHAT YOU LEARN ==================== -->
+  <section class="xhs-card" id="card-03">
+    <header class="card-head">
+      <div class="card-head-left">
+        <img src="assets/vox-logo.png" alt="VOX" class="card-head-logo">
+        <strong>VOX MUSIC SCHOOL</strong>
+      </div>
+      <div>02 / CORE ELEMENTS</div>
+      <div class="card-head-page">03 / 07</div>
+    </header>
+
+    <div class="card-body">
+      <div class="sec-tag">THE 4 ACOUSTIC DIMENSIONS</div>
+      <h2 class="sec-h2">编曲究竟在学什么？</h2>
+
+      <div class="c-grid-2">
+        <div class="c-card">
+          <span class="c-card-tag">DIMENSION 01 · 织体</span>
+          <h3 class="c-card-h3">配器织体与音位排列</h3>
+          <p class="c-card-p">决定谁来发声、何时发声。合理分配高低频段与和弦开闭音位，让声部层次分明不打架。</p>
+        </div>
+        <div class="c-card">
+          <span class="c-card-tag">DIMENSION 02 · 律动</span>
+          <h3 class="c-card-h3">鼓贝斯咬合与 Groove</h3>
+          <p class="c-card-p">底鼓与贝斯的精准互锁，踩镲的细微摇摆（Swing）与幽灵音加花，注入跳动的身体律动。</p>
+        </div>
+      </div>
+
+      <div class="c-grid-2">
+        <div class="c-card">
+          <span class="c-card-tag">DIMENSION 03 · 色彩</span>
+          <h3 class="c-card-h3">和声重配与情绪色彩</h3>
+          <p class="c-card-p">运用七和弦、九和弦、转位与离调，为相同旋律赋予截然不同的情绪走向与张力色彩。</p>
+        </div>
+        <div class="c-card">
+          <span class="c-card-tag">DIMENSION 04 · 空间</span>
+          <h3 class="c-card-h3">声学空间与动态呼吸</h3>
+          <p class="c-card-p">运用音量平衡、立体声展宽（Pan）、混响深度（Reverb）与 EQ，打造沉浸的现场声场。</p>
+        </div>
+      </div>
+
+      <!-- Zero-to-one path summary -->
+      <div style="background:var(--paper-card-light); border:1px solid var(--rule); padding:18px 22px; margin-top:6px;">
+        <span style="font-family:var(--mono); font-size:12px; letter-spacing:0.16em; color:var(--accent-warm); text-transform:uppercase; display:block; margin-bottom:4px;">ZERO-TO-ONE PATH</span>
+        <strong style="font-family:var(--serif); font-size:17px; color:var(--ink); display:block; margin-bottom:4px;">零基础起步：从直觉与可视化开始</strong>
+        <p style="font-size:14.5px; line-height:1.58; color:var(--muted);">
+          依托现代宿主（DAW）钢琴卷帘与网格，音高节奏一目了然。每学一个概念马上在工程里试听，先做再学。
+        </p>
+      </div>
+    </div>
+
+    <footer class="card-foot">
+      <span>VOX 音乐教室 · 编曲专业</span>
+      <span>四大声音维度 · 工业级制作思维</span>
+    </footer>
+  </section>
+
+
+  <!-- ==================== CARD 04 : 6 MODULES ==================== -->
+  <section class="xhs-card" id="card-04">
+    <header class="card-head">
+      <div class="card-head-left">
+        <img src="assets/vox-logo.png" alt="VOX" class="card-head-logo">
+        <strong>VOX MUSIC SCHOOL</strong>
+      </div>
+      <div>03 / 6 MODULES</div>
+      <div class="card-head-page">04 / 07</div>
+    </header>
+
+    <div class="card-body">
+      <div class="sec-tag">CURRICULUM ARCHITECTURE</div>
+      <h2 class="sec-h2">六大核心专业教学模块</h2>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+        <div style="background:var(--paper-card-light); border:1px solid var(--rule); padding:16px 18px;">
+          <div style="font-family:var(--mono); font-size:13px; font-weight:600; color:var(--accent); margin-bottom:3px;">MODULE 01</div>
+          <strong style="font-family:var(--serif); font-size:17px; color:var(--ink); display:block; margin-bottom:4px;">宿主工作流与 MIDI</strong>
+          <p style="font-size:13.5px; line-height:1.5; color:var(--ink-soft);">DAW 核心架构、钢琴卷帘、力度、量化与自动化包络（Automation）。</p>
+        </div>
+        <div style="background:var(--paper-card-light); border:1px solid var(--rule); padding:16px 18px;">
+          <div style="font-family:var(--mono); font-size:13px; font-weight:600; color:var(--accent); margin-bottom:3px;">MODULE 02</div>
+          <strong style="font-family:var(--serif); font-size:17px; color:var(--ink); display:block; margin-bottom:4px;">鼓组与律动构建</strong>
+          <p style="font-size:13.5px; line-height:1.5; color:var(--ink-soft);">底鼓军鼓骨干重心、踩镲切分、Swing 摇摆感与多风格 Groove 拆解。</p>
+        </div>
+        <div style="background:var(--paper-card-light); border:1px solid var(--rule); padding:16px 18px;">
+          <div style="font-family:var(--mono); font-size:13px; font-weight:600; color:var(--accent); margin-bottom:3px;">MODULE 03</div>
+          <strong style="font-family:var(--serif); font-size:17px; color:var(--ink); display:block; margin-bottom:4px;">低音线条与声学地基</strong>
+          <p style="font-size:13.5px; line-height:1.5; color:var(--ink-soft);">根音行进、贝斯与底鼓咬合、侧链避让与电贝斯/合成器低音塑造。</p>
+        </div>
+        <div style="background:var(--paper-card-light); border:1px solid var(--rule); padding:16px 18px;">
+          <div style="font-family:var(--mono); font-size:13px; font-weight:600; color:var(--accent); margin-bottom:3px;">MODULE 04</div>
+          <strong style="font-family:var(--serif); font-size:17px; color:var(--ink); display:block; margin-bottom:4px;">和声乐器与合成器</strong>
+          <p style="font-size:13.5px; line-height:1.5; color:var(--ink-soft);">键盘/吉他 Voicing、Pad 氛围铺底、Pluck 点缀与 Lead 主线声相编排。</p>
+        </div>
+        <div style="background:var(--paper-card-light); border:1px solid var(--rule); padding:16px 18px;">
+          <div style="font-family:var(--mono); font-size:13px; font-weight:600; color:var(--accent); margin-bottom:3px;">MODULE 05</div>
+          <strong style="font-family:var(--serif); font-size:17px; color:var(--ink); display:block; margin-bottom:4px;">曲式结构与动态配器</strong>
+          <p style="font-size:13.5px; line-height:1.5; color:var(--ink-soft);">Intro 到 Outro 曲式演进、声部加减张力释放、对位与过门加花。</p>
+        </div>
+        <div style="background:var(--paper-card-light); border:1px solid var(--rule); padding:16px 18px;">
+          <div style="font-family:var(--mono); font-size:13px; font-weight:600; color:var(--accent); margin-bottom:3px;">MODULE 06</div>
+          <strong style="font-family:var(--serif); font-size:17px; color:var(--ink); display:block; margin-bottom:4px;">音色塑造与基础混音</strong>
+          <p style="font-size:13.5px; line-height:1.5; color:var(--ink-soft);">减法 EQ、立体声混响与延迟空间深度、总线控制与成品母带导出。</p>
+        </div>
+      </div>
+
+      <!-- Piano roll visual -->
+      <div class="dark-box" style="margin-top:14px; padding:14px 18px;">
+        <div class="dark-box-head" style="margin-bottom:6px; padding-bottom:6px;">
+          <span>MIDI STEP SEQUENCER & PIANO ROLL</span>
+          <span style="color:#4ade80;">VELOCITY ACTIVE</span>
+        </div>
+        <svg width="100%" height="80" viewBox="0 0 860 80" style="display:block;">
+          <rect width="860" height="80" fill="#201e1a"/>
+          <line x1="0" y1="26" x2="860" y2="26" stroke="#2c2923" stroke-width="1"/>
+          <line x1="0" y1="53" x2="860" y2="53" stroke="#2c2923" stroke-width="1"/>
+          <!-- Notes -->
+          <rect x="30" y="58" width="80" height="16" rx="2" fill="#c06830"/>
+          <rect x="140" y="58" width="80" height="16" rx="2" fill="#c06830"/>
+          <rect x="250" y="58" width="80" height="16" rx="2" fill="#c06830"/>
+          <rect x="360" y="58" width="80" height="16" rx="2" fill="#c06830"/>
+          <rect x="470" y="58" width="80" height="16" rx="2" fill="#c06830"/>
+          <rect x="580" y="58" width="80" height="16" rx="2" fill="#c06830"/>
+          
+          <rect x="140" y="31" width="80" height="16" rx="2" fill="#e5a958"/>
+          <rect x="360" y="31" width="80" height="16" rx="2" fill="#e5a958"/>
+          <rect x="580" y="31" width="80" height="16" rx="2" fill="#e5a958"/>
+          
+          <rect x="30" y="5" width="190" height="16" rx="2" fill="#507068"/>
+          <rect x="250" y="5" width="190" height="16" rx="2" fill="#507068"/>
+          <rect x="470" y="5" width="190" height="16" rx="2" fill="#507068"/>
+        </svg>
+      </div>
+    </div>
+
+    <footer class="card-foot">
+      <span>VOX 音乐教室 · 编曲专业</span>
+      <span>完整工程链条 · 系统化进阶</span>
+    </footer>
+  </section>
+
+
+  <!-- ==================== CARD 05 : METHODOLOGY & PHILOSOPHY ==================== -->
+  <section class="xhs-card" id="card-05">
+    <header class="card-head">
+      <div class="card-head-left">
+        <img src="assets/vox-logo.png" alt="VOX" class="card-head-logo">
+        <strong>VOX MUSIC SCHOOL</strong>
+      </div>
+      <div>04 / METHODOLOGY</div>
+      <div class="card-head-page">05 / 07</div>
+    </header>
+
+    <div class="card-body">
+      <div class="sec-tag">VOX TEACHING METHOD</div>
+      <h2 class="sec-h2">四步闭环与教学理念</h2>
+
+      <!-- 4-step flow -->
+      <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:12px; margin-bottom:20px;">
+        <div style="background:var(--paper-card-light); border:1px solid var(--rule); border-top:4px solid var(--accent); padding:16px 12px;">
+          <div style="font-family:var(--serif); font-size:30px; font-weight:700; color:var(--ink); line-height:1; margin-bottom:4px;">听</div>
+          <div style="font-family:var(--mono); font-size:10.5px; color:var(--accent-warm); letter-spacing:0.1em; margin-bottom:6px;">01/LISTEN</div>
+          <p style="font-size:12.5px; line-height:1.5; color:var(--ink-soft);">戴上监听耳机，建立多音轨听觉雷达，分清每个频段的乐器角色。</p>
+        </div>
+        <div style="background:var(--paper-card-light); border:1px solid var(--rule); border-top:4px solid var(--accent); padding:16px 12px;">
+          <div style="font-family:var(--serif); font-size:30px; font-weight:700; color:var(--ink); line-height:1; margin-bottom:4px;">拆</div>
+          <div style="font-family:var(--mono); font-size:10.5px; color:var(--accent-warm); letter-spacing:0.1em; margin-bottom:6px;">02/DECONSTRUCT</div>
+          <p style="font-size:12.5px; line-height:1.5; color:var(--ink-soft);">将经典工程拉入宿主，逆向分轨复刻，看大师如何配置声部。</p>
+        </div>
+        <div style="background:var(--paper-card-light); border:1px solid var(--rule); border-top:4px solid var(--accent); padding:16px 12px;">
+          <div style="font-family:var(--serif); font-size:30px; font-weight:700; color:var(--ink); line-height:1; margin-bottom:4px;">仿</div>
+          <div style="font-family:var(--mono); font-size:10.5px; color:var(--accent-warm); letter-spacing:0.1em; margin-bottom:6px;">03/IMITATE</div>
+          <p style="font-size:12.5px; line-height:1.5; color:var(--ink-soft);">套用经典作品曲式框架与律动模板，填入自己的和声与旋律重编。</p>
+        </div>
+        <div style="background:var(--paper-card-light); border:1px solid var(--rule); border-top:4px solid var(--accent); padding:16px 12px;">
+          <div style="font-family:var(--serif); font-size:30px; font-weight:700; color:var(--ink); line-height:1; margin-bottom:4px;">写</div>
+          <div style="font-family:var(--mono); font-size:10.5px; color:var(--accent-warm); letter-spacing:0.1em; margin-bottom:6px;">04/CREATE</div>
+          <p style="font-size:12.5px; line-height:1.5; color:var(--ink-soft);">脱离参考曲，独立从零构建工程，完成属于你自己的第一首完整作品。</p>
+        </div>
+      </div>
+
+      <!-- Philosophy cards -->
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <div style="background:var(--paper-card); border-left:4px solid var(--ink); padding:18px 20px;">
+          <strong style="font-family:var(--serif); font-size:18px; color:var(--ink); display:block; margin-bottom:5px;">少讲百科，多做对比试听与现场改写</strong>
+          <p style="font-size:14.5px; line-height:1.6; color:var(--ink-soft);">
+            拒绝枯燥的名词灌输。老师在课堂上现场演示“改前 vs 改后”工程对比，实时调整和弦与鼓点，亲耳感受音乐张力的蜕变。
+          </p>
+        </div>
+        <div style="background:var(--paper-card); border-left:4px solid var(--accent); padding:18px 20px;">
+          <strong style="font-family:var(--serif); font-size:18px; color:var(--ink); display:block; margin-bottom:5px;">先做再学，真实工程驱动与细致批改</strong>
+          <p style="font-size:14.5px; line-height:1.6; color:var(--ink-soft);">
+            从第一节课就置身真实工程环境。课后作业直接提交分轨工程文件，获得细致到每个音符力度、量化精度和频段均衡的专业反馈。
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <footer class="card-foot">
+      <span>VOX 音乐教室 · 教学特色</span>
+      <span>听 · 拆 · 仿 · 写 · 真实工程驱动</span>
+    </footer>
+  </section>
+
+
+  <!-- ==================== CARD 06 : TARGET & MILESTONES ==================== -->
+  <section class="xhs-card" id="card-06">
+    <header class="card-head">
+      <div class="card-head-left">
+        <img src="assets/vox-logo.png" alt="VOX" class="card-head-logo">
+        <strong>VOX MUSIC SCHOOL</strong>
+      </div>
+      <div>05 / AUDIENCE & JOURNEY</div>
+      <div class="card-head-page">06 / 07</div>
+    </header>
+
+    <div class="card-body">
+      <div class="sec-tag">TARGET AUDIENCE & GROWTH</div>
+      <h2 class="sec-h2">适合谁？与 14 周进阶历程</h2>
+
+      <div class="c-grid-2" style="margin-bottom:12px;">
+        <div class="c-card" style="padding:14px 16px;">
+          <span class="c-card-tag">GUITAR / KEYS</span>
+          <h3 class="c-card-h3" style="font-size:17px; margin-bottom:4px;">吉他 / 键盘弹唱者</h3>
+          <p class="c-card-p" style="font-size:13.5px; line-height:1.5;">为弹唱搭建饱满的鼓组、贝斯与合成器，赋予作品完整乐队厚度。</p>
+        </div>
+        <div class="c-card" style="padding:14px 16px;">
+          <span class="c-card-tag">SONGWRITERS</span>
+          <h3 class="c-card-h3" style="font-size:17px; margin-bottom:4px;">词曲创作新人</h3>
+          <p class="c-card-p" style="font-size:13.5px; line-height:1.5;">把手机语音备忘录的旋律动机，打磨成具备正式发布品质的成熟单曲。</p>
+        </div>
+        <div class="c-card" style="padding:14px 16px;">
+          <span class="c-card-tag">BEATMAKERS</span>
+          <h3 class="c-card-h3" style="font-size:17px; margin-bottom:4px;">卧室制作人</h3>
+          <p class="c-card-p" style="font-size:13.5px; line-height:1.5;">突破 8 小节 Loop 瓶颈，掌握完整曲式结构演进与多声部配器技巧。</p>
+        </div>
+        <div class="c-card" style="padding:14px 16px;">
+          <span class="c-card-tag">ENTHUSIASTS</span>
+          <h3 class="c-card-h3" style="font-size:17px; margin-bottom:4px;">深度音乐爱好者</h3>
+          <p class="c-card-p" style="font-size:13.5px; line-height:1.5;">系统理解现代音乐工业制作逻辑，大幅提升听觉审美与鉴赏深度。</p>
+        </div>
+      </div>
+
+      <!-- 14-week milestones -->
+      <div style="background:var(--paper-card-light); border:1px solid var(--rule); padding:18px 20px;">
+        <span style="font-family:var(--mono); font-size:12px; letter-spacing:0.16em; color:var(--accent); text-transform:uppercase; display:block; margin-bottom:8px;">14-WEEK MILESTONES</span>
+        <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:10px;">
+          <div>
+            <span style="font-family:var(--mono); font-size:11px; color:var(--accent-warm); display:block;">W01-04</span>
+            <strong style="font-size:14px; color:var(--ink); display:block;">地基搭建</strong>
+            <p style="font-size:12px; color:var(--muted); line-height:1.4;">宿主工作流、MIDI与鼓贝斯</p>
+          </div>
+          <div>
+            <span style="font-family:var(--mono); font-size:11px; color:var(--accent-warm); display:block;">W05-08</span>
+            <strong style="font-size:14px; color:var(--ink); display:block;">织体丰富</strong>
+            <p style="font-size:12px; color:var(--muted); line-height:1.4;">和声配器、合成器声音设计</p>
+          </div>
+          <div>
+            <span style="font-family:var(--mono); font-size:11px; color:var(--accent-warm); display:block;">W09-11</span>
+            <strong style="font-size:14px; color:var(--ink); display:block;">曲式动态</strong>
+            <p style="font-size:12px; color:var(--muted); line-height:1.4;">经典扒带、段落张力推进</p>
+          </div>
+          <div>
+            <span style="font-family:var(--mono); font-size:11px; color:var(--accent-warm); display:block;">W12-14</span>
+            <strong style="font-size:14px; color:var(--ink); display:block;">作品交付</strong>
+            <p style="font-size:12px; color:var(--muted); line-height:1.4;">完整原创工程、混音与导出</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="card-foot">
+      <span>VOX 音乐教室 · 编曲专业</span>
+      <span>从第一颗 MIDI 音符到第一首完整作品</span>
+    </footer>
+  </section>
+
+
+  <!-- ==================== CARD 07 : SEMESTER INFO & BENEFITS ==================== -->
+  <section class="xhs-card" id="card-07">
+    <header class="card-head">
+      <div class="card-head-left">
+        <img src="assets/vox-logo.png" alt="VOX" class="card-head-logo">
+        <strong>VOX MUSIC SCHOOL</strong>
+      </div>
+      <div>06 / SEMESTER INFO</div>
+      <div class="card-head-page">07 / 07</div>
+    </header>
+
+    <div class="card-body">
+      <div class="sec-tag">ENROLLMENT & BENEFITS</div>
+      <h2 class="sec-h2">2026 秋季学期信息</h2>
+
+      <!-- Info bar -->
+      <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:12px; margin-bottom:18px;">
+        <div style="background:var(--paper-card); border:1px solid var(--rule); padding:14px 12px; text-align:center;">
+          <span style="font-family:var(--mono); font-size:11px; color:var(--accent); display:block; margin-bottom:3px;">START DATE</span>
+          <strong style="font-family:var(--serif); font-size:19px; color:var(--ink); display:block;">2026.09.19</strong>
+          <span style="font-size:12.5px; color:var(--muted);">秋季正式开课</span>
+        </div>
+        <div style="background:var(--paper-card); border:1px solid var(--rule); padding:14px 12px; text-align:center;">
+          <span style="font-family:var(--mono); font-size:11px; color:var(--accent); display:block; margin-bottom:3px;">DURATION</span>
+          <strong style="font-family:var(--serif); font-size:19px; color:var(--ink); display:block;">14 教学周</strong>
+          <span style="font-size:12.5px; color:var(--muted);">完整教学周期</span>
+        </div>
+        <div style="background:var(--paper-card); border:1px solid var(--rule); padding:14px 12px; text-align:center;">
+          <span style="font-family:var(--mono); font-size:11px; color:var(--accent); display:block; margin-bottom:3px;">PROGRAM</span>
+          <strong style="font-family:var(--serif); font-size:19px; color:var(--ink); display:block;">编曲 / 制作</strong>
+          <span style="font-size:12.5px; color:var(--muted);">工程实操与混音</span>
+        </div>
+      </div>
+
+      <!-- Benefits dark box -->
+      <div style="background:#252420; color:#f5efe3; padding:22px 20px; border-radius:4px; margin-bottom:18px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+          <strong style="font-family:var(--serif); font-size:19px; color:#f5efe3;">学期优惠政策</strong>
+          <span style="font-family:var(--mono); font-size:11px; letter-spacing:0.14em; color:#b68a4c;">BENEFITS</span>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:10px;">
+          <div style="background:#1c1b18; border:1px solid #3d3a33; padding:10px 12px;">
+            <div style="font-size:13px; color:#ded8cb;">老生续报</div>
+            <div style="font-family:var(--mono); font-size:16px; font-weight:700; color:#e5a958;">立减 200 元</div>
+          </div>
+          <div style="background:#1c1b18; border:1px solid #3d3a33; padding:10px 12px;">
+            <div style="font-size:13px; color:#ded8cb;">好友推荐</div>
+            <div style="font-family:var(--mono); font-size:16px; font-weight:700; color:#e5a958;">立减 200 元</div>
+          </div>
+          <div style="background:#1c1b18; border:1px solid #3d3a33; padding:10px 12px;">
+            <div style="font-size:13px; color:#ded8cb;">新朋友专享</div>
+            <div style="font-family:var(--mono); font-size:16px; font-weight:700; color:#e5a958;">立减 200 元</div>
+          </div>
+          <div style="background:#1c1b18; border:1px solid #3d3a33; padding:10px 12px;">
+            <div style="font-size:13px; color:#ded8cb;">双人同行</div>
+            <div style="font-family:var(--mono); font-size:16px; font-weight:700; color:#e5a958;">立减 200 元</div>
+          </div>
+          <div style="background:#1c1b18; border:1px solid #3d3a33; padding:10px 12px;">
+            <div style="font-size:13px; color:#ded8cb;">高校新生</div>
+            <div style="font-family:var(--mono); font-size:16px; font-weight:700; color:#e5a958;">立减 200 元</div>
+          </div>
+          <div style="background:#1c1b18; border:1px solid #3d3a33; padding:10px 12px;">
+            <div style="font-size:13px; color:#ded8cb;">连续续习奖励</div>
+            <div style="font-family:var(--mono); font-size:16px; font-weight:700; color:#e5a958;">最高立减 2280</div>
+          </div>
+        </div>
+        <p style="font-size:11px; color:#8c8577; margin-top:10px;">* 优惠不重复叠加，具体资格以教务核验为准。</p>
+      </div>
+
+      <!-- Closing signature -->
+      <div style="text-align:center; padding-top:4px;">
+        <div style="font-family:var(--serif); font-size:20px; font-weight:600; color:var(--ink); margin-bottom:6px;">
+          从第一颗 MIDI 音符，到第一首属于你的完整作品。
+        </div>
+        <div style="font-family:var(--mono); font-size:12.5px; color:var(--muted); letter-spacing:0.16em;">
+          VOX MUSIC SCHOOL · 武汉光谷 · SINCE 2012
+        </div>
+      </div>
+    </div>
+
+    <footer class="card-foot">
+      <span>VOX 音乐教室 · 武汉光谷</span>
+      <span>这个秋天，从喜欢音乐，到开始玩音乐。</span>
+    </footer>
+  </section>
+
+</body>
+</html>
